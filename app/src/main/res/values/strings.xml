@@ -9,4 +9,6 @@
     <string name="select_picture">اختر صورة</string>
     <string name="failed_to_get_image">فشل في الوصول إلى الصورة</string>
     <string name="read_permission_needed_to_access_files">صلاحية الوصول غلى الملفات مطلوبة للوصول للصور وملفات أخرى.</string>
+    <string name="add_new_list_item">+ أضف عنصر</string>
+    <string name="white">أبيض</string>
 </resources>

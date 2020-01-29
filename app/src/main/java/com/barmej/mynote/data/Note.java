@@ -9,15 +9,26 @@ import java.util.ArrayList;
 public class Note implements Parcelable {
     private String noteText;
     private Uri notePhoto;
+    private ArrayList<CheckList> checkList;
+    private int noteColorId;
 
     public Note(String noteText) {
         this.noteText = noteText;
     }
 
-    public Note(String noteText, Uri notePhoto) {
+    public Note(String noteText, Uri notePhoto, int noteColorId) {
         this.noteText = noteText;
         this.notePhoto = notePhoto;
+        this.noteColorId = noteColorId;
     }
+
+    public Note(String noteText, Uri notePhoto, ArrayList<CheckList> checkList, int noteColorId) {
+        this.noteText = noteText;
+        this.notePhoto = notePhoto;
+        this.checkList = checkList;
+        this.noteColorId = noteColorId;
+    }
+
 
     public String getNoteText() {
         return noteText;
@@ -26,6 +37,15 @@ public class Note implements Parcelable {
         return notePhoto;
     }
 
+    public ArrayList<CheckList> getNoteCheckList() {
+        return checkList;
+    }
+
+    public int getNoteColorId() {
+        return noteColorId;
+    }
+
+    // This is the main ArrayList which has all notes with their different types (text, photo, or check list).
     public  static ArrayList<Note> getDefaultList() {
         ArrayList<Note> defaultList = new ArrayList<>();
         defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
@@ -36,6 +56,8 @@ public class Note implements Parcelable {
         defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
         return defaultList;
     }
+
+
 
     //write object values to parcel for storage
     public void writeToParcel(Parcel out, int flags) {
