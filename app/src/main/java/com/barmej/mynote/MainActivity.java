@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -98,10 +97,10 @@ public class MainActivity extends AppCompatActivity {
                 String noteText = data.getStringExtra(Constants.EXTRA_NOTE_TEXT);
                 Uri photoUri = data.getParcelableExtra(Constants.EXTRA_NOTE_PHOTO_URI);
                 //ArrayList<String> checkListStrings = data.getStringArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST);
-                ArrayList<CheckList> checkListStrings = data.getParcelableArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST);
+                ArrayList<CheckList> checkListItems = data.getParcelableArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST);
                 int backgroundColorId = data.getIntExtra(Constants.EXTRA_NOTE_COLOR_NAME, 0);
 
-                Note note = new Note(noteText, photoUri, checkListStrings, backgroundColorId);
+                Note note = new Note(noteText, photoUri, checkListItems, backgroundColorId);
                 addNewItem(note);
             }
         } else if (requestCode == EDIT_NOTE) {

@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,14 +37,13 @@ public class AddNewNoteActivity extends AppCompatActivity {
     ImageView mNewAddedPhotoIV;
     Uri mSelectedPhotoUri;
     EditText mAddNewChecklistItemET;
+    LinearLayout mLinearLayout;
 
     int backgroundColorId;
     int checkedRadioButtonId;
 
     private RadioGroup mRadioGroup;
     private CardView mCardView;
-
-    LinearLayout mLinearLayout;
 
     private static final int VIEW_PHOTO = 110;
     private static final int READ_PHOTO_FROM_GALLERY_PERMISSION = 120;
@@ -221,28 +221,70 @@ public class AddNewNoteActivity extends AppCompatActivity {
     }
 
     private void addNewChecklistItem() {
-        String checklistItem = mAddNewChecklistItemET.getText().toString();
-        CheckList checkList = new CheckList(checklistItem, false);
+        String checklistItemText = mAddNewChecklistItemET.getText().toString();
+        boolean checkListItemStatus = false;
+        CheckBox checkBoxStatus = new CheckBox(this);
+        //checkBoxStatus.setChecked();
+
+        CheckList checkList = new CheckList(checklistItemText, checkListItemStatus);
+        Log.i("Array Content is: ", checklistItemText + checkListItemStatus);
+
         mItems.add(checkList);
         mChecklistAdapter.notifyItemInserted(mItems.size() -1);
         mAddNewChecklistItemET.setText("");
     }
 
     private void onCheckListItemClicked(int position) {
+        Toast.makeText(this, "clicked on item", Toast.LENGTH_LONG).show();
         CheckList checkList = mItems.get(position);
-        String checkListItemName = checkList.getCheckListItemText();
+
+        final CheckBox checkBoxStatus = new CheckBox(this);
+        String checklistItemText = checkList.getCheckListItemText();
         boolean checkListItemStatus = checkList.isCheckListItemStatus();
 
-        if (!checkListItemStatus) {
-            checkListItemStatus = true;
+        checkBoxStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(checkBoxStatus.isChecked()) {
+                        Log.i("Array Content is: ", "true");
+                        checkBoxStatus.setPaintFlags(checkBoxStatus.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    } else {
+                        if ((checkBoxStatus.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
+                            Log.i("Array Content is: ", "false");
+                            checkBoxStatus.setPaintFlags( checkBoxStatus.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                        }
+                    }
+                }
+            });
+        checkListItemStatus = checkBoxStatus.isChecked();
+        Log.i("Array Content is: ", "status " + checkListItemStatus);
 
-        } else {
-            checkListItemStatus = false;
-        }
+//        if (checkBoxStatus.isChecked()) {
+//            checkListItemStatus = false;
+//            Log.i("Array Content is: ", "true");
+//        } else {
+//            checkListItemStatus = true;
+//            Log.i("Array Content is: ", "false");
+//        }
 
-        checkList = new CheckList(checkListItemName, checkListItemStatus);
+        checkList = new CheckList(checklistItemText, checkListItemStatus);
         mItems.set(position, checkList);
         mChecklistAdapter.notifyItemChanged(position);
+
+//        CheckList checkList = mItems.get(position);
+//        String checkListItemName = checkList.getCheckListItemText();
+//        boolean checkListItemStatus = checkList.isCheckListItemStatus();
+//
+//        if (!checkListItemStatus) {
+//            checkListItemStatus = true;
+//
+//        } else {
+//            checkListItemStatus = false;
+//        }
+//
+//        checkList = new CheckList(checkListItemName, checkListItemStatus);
+//        mItems.set(position, checkList);
+//        mChecklistAdapter.notifyItemChanged(position);
     }
 
     private void submit() {

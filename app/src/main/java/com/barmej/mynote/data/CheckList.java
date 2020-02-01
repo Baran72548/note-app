@@ -2,19 +2,31 @@ package com.barmej.mynote.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.CheckBox;
 
 import java.util.ArrayList;
 
 public class CheckList implements Parcelable {
     private String checkListItemText;
     private boolean checkListItemStatus;
+    private CheckBox checkBoxStatus;
+
+    public CheckList(String checkListItemText, CheckBox checkBoxStatus) {
+        this.checkListItemText = checkListItemText;
+        this.checkBoxStatus = checkBoxStatus;
+    }
 
     public CheckList(String checkListItemText, boolean checkListItemStatus) {
         this.checkListItemText = checkListItemText;
+        this.checkListItemStatus = checkListItemStatus;
     }
 
     public String getCheckListItemText() {
         return checkListItemText;
+    }
+
+    public CheckBox getCheckBoxStatus() {
+        return checkBoxStatus;
     }
 
     public static ArrayList<CheckList> getChecklistList() {

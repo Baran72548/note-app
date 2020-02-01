@@ -1,6 +1,5 @@
 package com.barmej.mynote.adapter;
 
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +31,10 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.Chec
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChecklistViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChecklistAdapter.ChecklistViewHolder holder, int position) {
         CheckList checkList = mItems.get(position);
         holder.checkBox.setText(checkList.getCheckListItemText());
+        //holder.checkBox.setChecked(checkList.isCheckListItemStatus());
 
         holder.position = position;
     }
@@ -52,18 +52,18 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.Chec
             super(itemView);
             checkBox = itemView.findViewById(R.id.note_checkbox);
 
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(checkBox.isChecked()) {
-                        checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else {
-                        if ((checkBox.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
-                            checkBox.setPaintFlags( checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                        }
-                    }
-                }
-            });
+//            checkBox.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if(checkBox.isChecked()) {
+//                        checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                    } else {
+//                        if ((checkBox.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
+//                            checkBox.setPaintFlags( checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+//                        }
+//                    }
+//                }
+//            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

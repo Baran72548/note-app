@@ -65,9 +65,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             for (int i = 0; i < checkBoxList.size(); i++) {
                 CheckList checkList = checkBoxList.get(i);
                 String checkBoxItemText = checkList.getCheckListItemText();
-                boolean checkBoxItemStatus = checkList.isCheckListItemStatus();
+                CheckBox checkBoxStatus = checkList.getCheckBoxStatus();
+                boolean checkBoxItemStatus = holder.noteCheckBox1.isChecked();
 
-                Log.i("r", "check value: " + checkBoxItemStatus);
+                Log.i("r", "check value: " + checkBoxStatus);
                 switch (i) {
                     case 0:
                         holder.noteCheckBox1.setText(checkBoxItemText);
@@ -118,7 +119,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         CheckBox noteCheckBox2;
         CheckBox noteCheckBox3;
         private CardView cardView;
-
 
         public NoteViewHolder(@NonNull View itemView, final ItemClickListener mItemClickListener, final ItemLongClickListener mItemLongClickListen) {
             super(itemView);
