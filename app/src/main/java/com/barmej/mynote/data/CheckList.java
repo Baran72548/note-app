@@ -25,10 +25,6 @@ public class CheckList implements Parcelable {
         return checkListItemText;
     }
 
-    public CheckBox getCheckBoxStatus() {
-        return checkBoxStatus;
-    }
-
     public static ArrayList<CheckList> getChecklistList() {
         ArrayList<CheckList> checklistList = new ArrayList<>();
         return checklistList;
@@ -36,6 +32,10 @@ public class CheckList implements Parcelable {
 
     public boolean isCheckListItemStatus() {
         return checkListItemStatus;
+    }
+
+    public void setCheckListItemStatus(boolean checkListItemStatus) {
+        this.checkListItemStatus = checkListItemStatus;
     }
 
     //write object values to parcel for storage

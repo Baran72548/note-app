@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.barmej.mynote.R;
+
 import java.util.ArrayList;
 
 public class Note implements Parcelable {
@@ -12,8 +14,9 @@ public class Note implements Parcelable {
     private ArrayList<CheckList> checkList;
     private int noteColorId;
 
-    public Note(String noteText) {
+    public Note(String noteText, int noteColorId) {
         this.noteText = noteText;
+        this.noteColorId = noteColorId;
     }
 
     public Note(String noteText, Uri notePhoto, int noteColorId) {
@@ -29,10 +32,10 @@ public class Note implements Parcelable {
         this.noteColorId = noteColorId;
     }
 
-
     public String getNoteText() {
         return noteText;
     }
+
     public Uri getNotePhoto() {
         return notePhoto;
     }
@@ -48,12 +51,12 @@ public class Note implements Parcelable {
     // This is the main ArrayList which has all notes with their different types (text, photo, or check list).
     public  static ArrayList<Note> getDefaultList() {
         ArrayList<Note> defaultList = new ArrayList<>();
-        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
-        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
-        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
-        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
-        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
-        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك."));
+        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.", R.color.white));
+        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.", R.color.white));
+        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.", R.color.white));
+        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.", R.color.white));
+        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.", R.color.white));
+        defaultList.add(new Note("مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك. مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.", R.color.white));
         return defaultList;
     }
 

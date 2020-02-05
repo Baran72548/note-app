@@ -2,9 +2,7 @@ package com.barmej.mynote.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +25,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
+    private Context context;
     private ArrayList<Note> mItems;
     private ItemClickListener mItemClickListener;
     private ItemLongClickListener mItemLongClickListener;
 
-    public NoteAdapter(ArrayList<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener) {
+    public NoteAdapter(ArrayList<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener, Context context) {
         this.mItems = mItems;
         this.mItemClickListener = mItemClickListener;
         this.mItemLongClickListener = mItemLongClickListener;
+        this.context = context;
     }
-
 
     private static Random mRandom = new Random();
 
@@ -51,24 +50,24 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     @Override
     public void onBindViewHolder(@NonNull NoteAdapter.NoteViewHolder holder, int position) {
         Note note = mItems.get(position);
-        holder.cardView.setBackgroundColor(note.getNoteColorId());
+        holder.cardView.setBackgroundColor(context.getResources().getColor(note.getNoteColorId()));
 
         holder.noteTextTV.setText(note.getNoteText());
+
         if (note.getNotePhoto() != null) {
             holder.notePhotoIV.setImageURI(note.getNotePhoto());
             holder.notePhotoIV.setVisibility(View.VISIBLE);
         }
 
         ArrayList<CheckList> checkBoxList = note.getNoteCheckList();
-
         if (checkBoxList != null) {
             for (int i = 0; i < checkBoxList.size(); i++) {
                 CheckList checkList = checkBoxList.get(i);
                 String checkBoxItemText = checkList.getCheckListItemText();
-                CheckBox checkBoxStatus = checkList.getCheckBoxStatus();
-                boolean checkBoxItemStatus = holder.noteCheckBox1.isChecked();
+                boolean checkBoxItemStatus = checkList.isCheckListItemStatus();
+                //CheckBox checkBoxStatus = checkList.getCheckBoxStatus();
 
-                Log.i("r", "check value: " + checkBoxStatus);
+                Log.i("r", "check value: " + checkBoxItemStatus);
                 switch (i) {
                     case 0:
                         holder.noteCheckBox1.setText(checkBoxItemText);
@@ -141,43 +140,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                 public boolean onLongClick(View view) {
                     mItemLongClickListen.onItemLongClickListener(position);
                     return true;
-                }
-            });
-
-            noteCheckBox1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(noteCheckBox1.isChecked()) {
-                        noteCheckBox1.setPaintFlags(noteCheckBox1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else {
-                        if ((noteCheckBox1.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
-                            noteCheckBox1.setPaintFlags( noteCheckBox1.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                        }
-                    }
-                }
-            });
-            noteCheckBox2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(noteCheckBox2.isChecked()) {
-                        noteCheckBox2.setPaintFlags(noteCheckBox2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else {
-                        if ((noteCheckBox2.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
-                            noteCheckBox2.setPaintFlags( noteCheckBox2.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                        }
-                    }
-                }
-            });
-            noteCheckBox3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(noteCheckBox3.isChecked()) {
-                        noteCheckBox3.setPaintFlags(noteCheckBox3.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else {
-                        if ((noteCheckBox3.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
-                            noteCheckBox3.setPaintFlags( noteCheckBox3.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                        }
-                    }
                 }
             });
         }

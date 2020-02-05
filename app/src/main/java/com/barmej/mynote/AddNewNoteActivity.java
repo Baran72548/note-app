@@ -12,13 +12,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +24,7 @@ import android.widget.Toast;
 
 import com.barmej.mynote.adapter.ChecklistAdapter;
 import com.barmej.mynote.data.CheckList;
-import com.barmej.mynote.listener.ItemClickListener;
+import com.barmej.mynote.listener.CheckBoxClickListener;
 
 import java.util.ArrayList;
 
@@ -39,7 +36,7 @@ public class AddNewNoteActivity extends AppCompatActivity {
     EditText mAddNewChecklistItemET;
     LinearLayout mLinearLayout;
 
-    int backgroundColorId;
+    int mBackgroundColorId = R.color.white;
     int checkedRadioButtonId;
 
     private RadioGroup mRadioGroup;
@@ -107,10 +104,10 @@ public class AddNewNoteActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.checklist_recycler_view);
         mItems = CheckList.getChecklistList();
         mChecklistAdapter = new ChecklistAdapter(mItems,
-                new ItemClickListener() {
+                new CheckBoxClickListener() {
                     @Override
-                    public void onItemClickListener(int position) {
-                        onCheckListItemClicked(position);
+                    public void onCheckBoxClickListener(int position, boolean checkBoxStatus) {
+                        onCheckListItemClicked(position, checkBoxStatus);
                     }
                 });
 
@@ -202,62 +199,82 @@ public class AddNewNoteActivity extends AppCompatActivity {
 
         switch (checkedRadioButtonId) {
             case R.id.white_radio_button:
-                backgroundColorId = Color.WHITE;
-                mCardView.setBackgroundColor(backgroundColorId);
+                mBackgroundColorId = R.color.white;
+                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
             case R.id.blue_radio_button:
-                backgroundColorId = getResources().getColor(R.color.blue);
-                mCardView.setBackgroundColor(backgroundColorId);
+                mBackgroundColorId = R.color.blue;
+                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
             case R.id.red_radio_button:
-                backgroundColorId = getResources().getColor(R.color.red);
-                mCardView.setBackgroundColor(backgroundColorId);
+                mBackgroundColorId = R.color.red;
+                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
             case R.id.yellow_radio_button:
-                backgroundColorId = getResources().getColor(R.color.yellow);
-                mCardView.setBackgroundColor(backgroundColorId);
+                mBackgroundColorId = R.color.yellow;
+                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
         }
     }
 
     private void addNewChecklistItem() {
         String checklistItemText = mAddNewChecklistItemET.getText().toString();
+        //CheckBox checkBoxStatus = new CheckBox(this);
         boolean checkListItemStatus = false;
-        CheckBox checkBoxStatus = new CheckBox(this);
-        //checkBoxStatus.setChecked();
 
-        CheckList checkList = new CheckList(checklistItemText, checkListItemStatus);
-        Log.i("Array Content is: ", checklistItemText + checkListItemStatus);
+        CheckList checkList = new CheckList(checklistItemText, false);
+        //Log.i("Array Content is: ", checklistItemText + checkListItemStatus);
 
         mItems.add(checkList);
+        Log.i("array items: ", "Add add items: " + mItems);
         mChecklistAdapter.notifyItemInserted(mItems.size() -1);
         mAddNewChecklistItemET.setText("");
     }
 
-    private void onCheckListItemClicked(int position) {
-        Toast.makeText(this, "clicked on item", Toast.LENGTH_LONG).show();
+    private void onCheckListItemClicked(int position, boolean checkBoxStatus) {
+        Toast.makeText(this, "clicked on item: " + checkBoxStatus, Toast.LENGTH_LONG).show();
         CheckList checkList = mItems.get(position);
-
-        final CheckBox checkBoxStatus = new CheckBox(this);
         String checklistItemText = checkList.getCheckListItemText();
-        boolean checkListItemStatus = checkList.isCheckListItemStatus();
+        //boolean checkListItemStatus = checkList.getCheckListItemStatus();
 
-        checkBoxStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(checkBoxStatus.isChecked()) {
-                        Log.i("Array Content is: ", "true");
-                        checkBoxStatus.setPaintFlags(checkBoxStatus.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    } else {
-                        if ((checkBoxStatus.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
-                            Log.i("Array Content is: ", "false");
-                            checkBoxStatus.setPaintFlags( checkBoxStatus.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                        }
-                    }
-                }
-            });
-        checkListItemStatus = checkBoxStatus.isChecked();
-        Log.i("Array Content is: ", "status " + checkListItemStatus);
+        if (checkBoxStatus) {
+            checkList.setCheckListItemStatus(true);
+        } else {
+            checkList.setCheckListItemStatus(false);
+        }
+
+        Log.i("Array Content is: ", checklistItemText + checkBoxStatus);
+
+//        checkList = new CheckList(checklistItemText, checkBoxStatus);
+        mItems.set(position, checkList);
+        mChecklistAdapter.notifyItemChanged(position);
+
+
+//        if(checkListItemStatus) {
+//            checkList.setCheckListItemStatus(checkListItemStatus);
+//
+//        } else {
+//            checkListItemStatus = true;
+//            Log.i("Array Content is: ", "ss" + checkListItemStatus);
+//        }
+
+//        checkBoxStatus.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if(checkBoxStatus.isChecked()) {
+//                        Log.i("Array Content is: ", "true");
+//                        checkBoxStatus.setPaintFlags(checkBoxStatus.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+//                    } else {
+//                        if ((checkBoxStatus.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
+//                            Log.i("Array Content is: ", "false");
+//                            checkBoxStatus.setPaintFlags( checkBoxStatus.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+//                        }
+//                    }
+//                }
+//            });
+//        checkListItemStatus = checkBoxStatus.isChecked();
+//        Log.i("Array Content is: ", "status " + checkListItemStatus);
+
 
 //        if (checkBoxStatus.isChecked()) {
 //            checkListItemStatus = false;
@@ -267,13 +284,13 @@ public class AddNewNoteActivity extends AppCompatActivity {
 //            Log.i("Array Content is: ", "false");
 //        }
 
-        checkList = new CheckList(checklistItemText, checkListItemStatus);
-        mItems.set(position, checkList);
-        mChecklistAdapter.notifyItemChanged(position);
+//        checkList = new CheckList(checklistItemText, checkListItemStatus);
+//        mItems.set(position, checkList);
+//        mChecklistAdapter.notifyItemChanged(position);
 
 //        CheckList checkList = mItems.get(position);
 //        String checkListItemName = checkList.getCheckListItemText();
-//        boolean checkListItemStatus = checkList.isCheckListItemStatus();
+//        boolean checkListItemStatus = checkList.getCheckListItemStatus();
 //
 //        if (!checkListItemStatus) {
 //            checkListItemStatus = true;
@@ -297,16 +314,15 @@ public class AddNewNoteActivity extends AppCompatActivity {
 //            listItems.add(listItemText);
 //        }
 
-        if (noteText.isEmpty() && mSelectedPhotoUri == null ) {
+        if (noteText.isEmpty() && mSelectedPhotoUri == null && mItems.size() == 0) {
             finish();
         } else {
             Log.v("noteText", noteText);
             Intent intent = new Intent();
             intent.putExtra(Constants.EXTRA_NOTE_TEXT, noteText);
             intent.putExtra(Constants.EXTRA_NOTE_PHOTO_URI, mSelectedPhotoUri);
-            //intent.putStringArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST, listItems);
             intent.putParcelableArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST, mItems);
-            intent.putExtra(Constants.EXTRA_NOTE_COLOR_NAME, backgroundColorId);
+            intent.putExtra(Constants.EXTRA_NOTE_COLOR_NAME, mBackgroundColorId);
             setResult(RESULT_OK, intent);
             finish();
         }

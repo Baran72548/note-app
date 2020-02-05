@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemLongClickListener(int position) {
                         deleteItem(position);
                     }
-                });
+                },
+                this);
 
 
         mListLayoutManager = new LinearLayoutManager(this);
@@ -96,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 String noteText = data.getStringExtra(Constants.EXTRA_NOTE_TEXT);
                 Uri photoUri = data.getParcelableExtra(Constants.EXTRA_NOTE_PHOTO_URI);
-                //ArrayList<String> checkListStrings = data.getStringArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST);
                 ArrayList<CheckList> checkListItems = data.getParcelableArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST);
                 int backgroundColorId = data.getIntExtra(Constants.EXTRA_NOTE_COLOR_NAME, 0);
 
+                Log.i("array items: ", "Main intent items: " + checkListItems);
                 Note note = new Note(noteText, photoUri, checkListItems, backgroundColorId);
                 addNewItem(note);
             }
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
         Note note = mItems.get(position);
         Uri photoUri = note.getNotePhoto();
         ArrayList<CheckList> checkListItems = note.getNoteCheckList();
+        Log.i("array items: ", "Main edit items: " + checkListItems);
         int backgroundColorId = note.getNoteColorId();
 
         Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
