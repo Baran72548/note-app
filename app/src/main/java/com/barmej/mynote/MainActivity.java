@@ -12,14 +12,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.barmej.mynote.adapter.NoteAdapter;
-import com.barmej.mynote.data.CheckList;
+import com.barmej.mynote.data.CheckItem;
 import com.barmej.mynote.data.Note;
 import com.barmej.mynote.listener.ItemClickListener;
 import com.barmej.mynote.listener.ItemLongClickListener;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private NoteAdapter mAdapter;
     private ArrayList<Note> mItems;
 
-    private ArrayList<CheckList> mCheckListItems;
+    private ArrayList<CheckItem> mCheckItemItems;
 
     Menu mMenu;
 
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCheckListItems = CheckList.getChecklistList();
+        mCheckItemItems = CheckItem.getChecklistList();
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mItems = Note.getDefaultList();
@@ -64,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 },
                 this);
-
 
         mListLayoutManager = new LinearLayoutManager(this);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -98,35 +95,33 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 String noteText = data.getStringExtra(Constants.EXTRA_NOTE_TEXT);
                 Uri photoUri = data.getParcelableExtra(Constants.EXTRA_NOTE_PHOTO_URI);
-                ArrayList<CheckList> checkListItems = data.getParcelableArrayListExtra(Constants.EXTRA_NOTE_CHECKLIST);
+                ArrayList<CheckItem> checkItemItems = (ArrayList) data.getSerializableExtra(Constants.EXTRA_NOTE_CHECKLIST);
                 int backgroundColorId = data.getIntExtra(Constants.EXTRA_NOTE_COLOR_NAME, 0);
 
-                Log.i("array items: ", "Main intent items: " + checkListItems);
-                Note note = new Note(noteText, photoUri, checkListItems, backgroundColorId);
+                Note note = new Note(noteText, photoUri, checkItemItems, backgroundColorId);
                 addNewItem(note);
             }
         } else if (requestCode == EDIT_NOTE) {
             if (resultCode == RESULT_OK && data != null) {
                 String noteText = data.getStringExtra(Constants.EXTRA_NOTE_EDITING_TEXT);
                 Uri photoUri = data.getParcelableExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI);
+                ArrayList<CheckItem> checkItemItems = (ArrayList) data.getSerializableExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST);
                 int backgroundColorId = data.getIntExtra(Constants.EXTRA_NOTE_EDITING_COLOR, 0);
                 int position = data.getIntExtra(Constants.EXTRA_NOTE_POSITION, 0);
 
-                if (noteText.isEmpty() && photoUri == null) {
-                    deleteItem(position);
+                if (noteText.isEmpty() && photoUri == null && checkItemItems.size() == 0) {
+                        deleteItem(position);
                 } else {
-                    Note note = new Note(noteText, photoUri, backgroundColorId);
+                    Note note = new Note(noteText, photoUri, checkItemItems, backgroundColorId);
                     updateItem(note, position);
                 }
             }
-        } else {
-            Toast.makeText(this, "aah ooh", Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
      * This method will be called from onActivityResult() to add new item (text, photo, or check list).
-     * @param note will carry data of String, Uri, or ...
+     * @param note will carry data of String, Uri, or ArrayList.
      */
     private void addNewItem(Note note) {
         mItems.add(note);
@@ -139,15 +134,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void editItem(int position) {
         Note note = mItems.get(position);
+        String noteText = note.getNoteText();
         Uri photoUri = note.getNotePhoto();
-        ArrayList<CheckList> checkListItems = note.getNoteCheckList();
-        Log.i("array items: ", "Main edit items: " + checkListItems);
+        ArrayList<CheckItem> checkItemItems = note.getNoteCheckList();
         int backgroundColorId = note.getNoteColorId();
 
         Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
-        intent.putExtra(Constants.EXTRA_NOTE_EDITING_TEXT, note);
+        intent.putExtra(Constants.EXTRA_NOTE_EDITING_TEXT, noteText);
         intent.putExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI, photoUri);
-        intent.putParcelableArrayListExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST, checkListItems);
+        intent.putExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST, checkItemItems);
         intent.putExtra(Constants.EXTRA_NOTE_EDITING_COLOR, backgroundColorId);
         intent.putExtra(Constants.EXTRA_NOTE_POSITION, position);
         startActivityForResult(intent, EDIT_NOTE);
@@ -156,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This method will be called from onActivityResult() to update item data (text, photo, or check list)
      * in specific position.
-     * @param note will carry updated data of String, Uri, or ...
+     * @param note will carry updated data of String, Uri, or ArrayList.
      * @param position is the index of updated item on the list.
      */
     private void updateItem(Note note, int position) {

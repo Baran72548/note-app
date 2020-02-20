@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Note</string>
+    <string name="add_new_list_item">+ أضف عنصر</string>
+    <string name="add_note">تم</string>
+    <string name="cancel">إلغاء</string>
+    <string name="confirm">تأكيد الإزالة</string>
+    <string name="delete_confirmation">هل أنت متأكد من رغبتك في حذف العنصر؟</string>
+    <string name="failed_to_get_image">فشل في الوصول إلى الصورة</string>
+    <string name="hint">أضف ملاحظتك ..</string>
+    <string name="note_example">مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.</string>
+    <string name="read_permission_needed_to_access_files">صلاحية الوصول إلى الملفات مطلوبة للوصول للصور وملفات أخرى.</string>
+    <string name="select_picture">اختر صورة</string>
+</resources>

@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">My Note</string>
-    <string name="note_example">مرحباً بك في My Note. بإمكانك إضافة ملاحظاتك هنا، كما يمكنك إضافة بعض الصور أو إضافة قائمتك.</string>
-    <string name="add_note">تم</string>
-    <string name="delete_confirmation">هل أنت متأكد من رغبتك في حذف العنصر؟</string>
-    <string name="confirm">تأكيد الإزالة</string>
-    <string name="cancel">إلغاء</string>
-    <string name="hint">أضف ملاحظتك ..</string>
-    <string name="select_picture">اختر صورة</string>
-    <string name="failed_to_get_image">فشل في الوصول إلى الصورة</string>
-    <string name="read_permission_needed_to_access_files">صلاحية الوصول غلى الملفات مطلوبة للوصول للصور وملفات أخرى.</string>
-    <string name="add_new_list_item">+ أضف عنصر</string>
-    <string name="white">أبيض</string>
+    <string name="note_example">Welcome to My Note. You can add your note here, and add an image or a check list too.</string>
+    <string name="add_note">Done</string>
+    <string name="delete_confirmation">Are you sure you want to delete this item?</string>
+    <string name="confirm">Confirm Deletion</string>
+    <string name="cancel">Cancel</string>
+    <string name="hint">Add your note ..</string>
+    <string name="select_picture">Pick image</string>
+    <string name="failed_to_get_image">Failed to access image</string>
+    <string name="read_permission_needed_to_access_files">Permission is required to access images and other files.</string>
+    <string name="add_new_list_item">+ Add Element</string>
 </resources>

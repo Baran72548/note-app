@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -33,11 +32,16 @@ public class ViewPhotoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * View uploaded image in a full screen.
+     */
     private void setSelectedPhoto(Uri photoUri) {
-        Log.i("photoUri", "photoUri Uri is: " + photoUri);
         mViewedPhotoIV.setImageURI(photoUri);
     }
 
+    /**
+     * Delete uploaded image.
+     */
     private void deletePhoto() {
         mPhotoUri = null;
         Intent intent = new Intent();
