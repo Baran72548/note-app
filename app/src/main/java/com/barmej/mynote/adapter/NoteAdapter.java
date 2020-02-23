@@ -21,13 +21,15 @@ import com.barmej.mynote.listener.ItemClickListener;
 import com.barmej.mynote.listener.ItemLongClickListener;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     private Context context;
     private ArrayList<Note> mItems;
     private ItemClickListener mItemClickListener;
     private ItemLongClickListener mItemLongClickListener;
+
+    private static int NOTE_WITHOUT_CHECK_LIST_TYPE = 1;
+    private static int NOTE_WITH_CHECK_LIST_TYPE = 2;
 
     public NoteAdapter(ArrayList<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener, Context context) {
         this.mItems = mItems;
@@ -36,13 +38,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         this.context = context;
     }
 
-    private static Random mRandom = new Random();
-
     @NonNull
     @Override
     public NoteAdapter.NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card_view, parent, false);
-            return new NoteViewHolder(view, mItemClickListener, mItemLongClickListener);
+        View view;
+        if (viewType == NOTE_WITHOUT_CHECK_LIST_TYPE) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card_view, parent, false);
+            return new NoteWithoutCheckListViewHolder(view, mItemClickListener, mItemLongClickListener);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card_view_with_check_list, parent, false);
+            return new NoteWithCheckListViewHolder(view, mItemClickListener, mItemLongClickListener);
+        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -51,61 +57,23 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         Note note = mItems.get(position);
         holder.cardView.setBackgroundColor(context.getResources().getColor(note.getNoteColorId()));
 
-        holder.noteTextTV.setText(note.getNoteText());
-
-        if (note.getNotePhoto() != null) {
-            holder.notePhotoIV.setImageURI(note.getNotePhoto());
-            holder.notePhotoIV.setVisibility(View.VISIBLE);
+        if (getItemViewType(position) == NOTE_WITHOUT_CHECK_LIST_TYPE) {
+            ((NoteWithoutCheckListViewHolder) holder).setNoteDetails(note);
+        } else {
+            ((NoteWithCheckListViewHolder) holder).setCheckNoteDetails(note);
         }
 
-        ArrayList<CheckItem> checkBoxList = note.getNoteCheckList();
-        if (checkBoxList != null) {
-            if (checkBoxList.size() > 0) {
-                for (int i = 0; i < checkBoxList.size(); i++) {
-                    CheckItem checkItem = checkBoxList.get(i);
-                    String checkBoxItemText = checkItem.getCheckBoxItemText();
-                    boolean checkBoxItemStatus = checkItem.getCheckBoxItemStatus();
-
-                    switch (i) {
-                        case 0:
-                            holder.noteCheckBox1.setText(checkBoxItemText);
-                            holder.noteCheckBox1.setChecked(checkBoxItemStatus);
-                            holder.noteCheckBox1.setVisibility(View.VISIBLE);
-                            if (checkBoxItemStatus) {
-                                holder.noteCheckBox1.setPaintFlags(holder.noteCheckBox1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            }
-                            break;
-                        case 1:
-                            holder.noteCheckBox2.setText(checkBoxItemText);
-                            holder.noteCheckBox2.setChecked(checkBoxItemStatus);
-                            holder.noteCheckBox2.setVisibility(View.VISIBLE);
-                            if (checkBoxItemStatus) {
-                                holder.noteCheckBox2.setPaintFlags(holder.noteCheckBox2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            }
-                            break;
-                        case 2:
-                            holder.noteCheckBox3.setText(checkBoxItemText);
-                            holder.noteCheckBox3.setChecked(checkBoxItemStatus);
-                            holder.noteCheckBox3.setVisibility(View.VISIBLE);
-                            if (checkBoxItemStatus) {
-                                holder.noteCheckBox3.setPaintFlags(holder.noteCheckBox3.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-
-        holder.noteTextTV.getLayoutParams().height = getRandomRange(280, 85);
         holder.position = position;
     }
 
-    /**
-     * This method will create a random integer values of width and high for TextView's holder dimensions
-     * in order to get different ratios and to not show all note text.
-     */
-    private static int getRandomRange(int max, int min) {
-        return mRandom.nextInt((max-min)+min)+min;
+    @Override
+    public int getItemViewType(int position) {
+        if (mItems.get(position).getNoteCheckList() == null) {
+            return NOTE_WITHOUT_CHECK_LIST_TYPE;
+
+        } else {
+            return NOTE_WITH_CHECK_LIST_TYPE;
+        }
     }
 
     @Override
@@ -121,6 +89,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         CheckBox noteCheckBox2;
         CheckBox noteCheckBox3;
         private CardView cardView;
+        ArrayList<CheckItem> checkBoxList;
 
         public NoteViewHolder(@NonNull View itemView, final ItemClickListener mItemClickListener, final ItemLongClickListener mItemLongClickListen) {
             super(itemView);
@@ -145,6 +114,70 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
                     return true;
                 }
             });
+        }
+    }
+
+    private class NoteWithoutCheckListViewHolder extends NoteViewHolder {
+        public NoteWithoutCheckListViewHolder(View view, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener) {
+            super(view, mItemClickListener, mItemLongClickListener);
+        }
+
+        public void setNoteDetails(Note note) {
+            noteTextTV.setText(note.getNoteText());
+
+            notePhotoIV.setImageURI(note.getNotePhoto());
+            if (note.getNotePhoto() != null) {
+                notePhotoIV.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private class NoteWithCheckListViewHolder extends NoteViewHolder {
+        public NoteWithCheckListViewHolder(View view, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener) {
+            super(view, mItemClickListener, mItemLongClickListener);
+        }
+
+        public void setCheckNoteDetails(Note note) {
+            noteTextTV.setText(note.getNoteText());
+
+            notePhotoIV.setImageURI(note.getNotePhoto());
+            if (note.getNotePhoto() != null) {
+                notePhotoIV.setVisibility(View.VISIBLE);
+            }
+
+            checkBoxList = note.getNoteCheckList();
+            for (int i = 0; i < checkBoxList.size(); i++) {
+                CheckItem checkItem = checkBoxList.get(i);
+                String checkBoxItemText = checkItem.getCheckBoxItemText();
+                boolean checkBoxItemStatus = checkItem.getCheckBoxItemStatus();
+
+                switch (i) {
+                    case 0:
+                        noteCheckBox1.setText(checkBoxItemText);
+                        noteCheckBox1.setChecked(checkBoxItemStatus);
+                        noteCheckBox1.setVisibility(View.VISIBLE);
+                        if (checkBoxItemStatus) {
+                            noteCheckBox1.setPaintFlags(noteCheckBox1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        }
+                        break;
+                    case 1:
+                        noteCheckBox2.setText(checkBoxItemText);
+                        noteCheckBox2.setChecked(checkBoxItemStatus);
+                        noteCheckBox2.setVisibility(View.VISIBLE);
+                        if (checkBoxItemStatus) {
+                            noteCheckBox2.setPaintFlags(noteCheckBox2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        }
+                        break;
+                    case 2:
+                        noteCheckBox3.setText(checkBoxItemText);
+                        noteCheckBox3.setChecked(checkBoxItemStatus);
+                        noteCheckBox3.setVisibility(View.VISIBLE);
+                        if (checkBoxItemStatus) {
+                            noteCheckBox3.setPaintFlags(noteCheckBox3.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        }
+                        break;
+                }
+            }
         }
     }
 }

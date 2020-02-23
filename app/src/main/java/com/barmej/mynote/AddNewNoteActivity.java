@@ -258,6 +258,9 @@ public class AddNewNoteActivity extends AppCompatActivity {
         if (noteText.isEmpty() && mSelectedPhotoUri == null && mItems.size() == 0) {
             finish();
         } else {
+            if (mItems.size() == 0) {
+                mItems = null;
+            }
             Intent intent = new Intent();
             intent.putExtra(Constants.EXTRA_NOTE_TEXT, noteText);
             intent.putExtra(Constants.EXTRA_NOTE_PHOTO_URI, mSelectedPhotoUri);

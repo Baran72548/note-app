@@ -291,6 +291,10 @@ public class EditNoteActivity extends AppCompatActivity {
     private void submit(int position) {
         String editedNoteText = mEditedNoteET.getText().toString();
 
+        if (mItems.size() == 0) {
+            mItems = null;
+        }
+
         Intent intent = new Intent();
         intent.putExtra(Constants.EXTRA_NOTE_EDITING_TEXT, editedNoteText);
         intent.putExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI, mSelectedPhotoUri);
