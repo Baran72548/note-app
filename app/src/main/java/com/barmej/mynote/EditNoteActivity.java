@@ -3,12 +3,16 @@ package com.barmej.mynote;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,11 +21,15 @@ import android.widget.RadioGroup;
 
 import com.barmej.mynote.adapter.ChecklistAdapter;
 import com.barmej.mynote.data.CheckItem;
+import com.barmej.mynote.data.Note;
+import com.barmej.mynote.data.viewmodel.MainViewModel;
+import com.barmej.mynote.databinding.ActivityEditNoteBinding;
 import com.barmej.mynote.listener.CheckBoxClickListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class EditNoteActivity extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
     EditText mEditedNoteET;
     ImageView mEditedPhotoIV;
     Uri mSelectedPhotoUri = null;
@@ -38,21 +46,36 @@ public class EditNoteActivity extends AppCompatActivity {
     LinearLayout mLinearLayout;
     private RecyclerView mRecyclerView;
     private ChecklistAdapter mChecklistAdapter;
-    private ArrayList<CheckItem> mItems;
+    //private ArrayList<CheckItem> mItems;
+    private List<CheckItem> mItems;
 
     RecyclerView.LayoutManager mListLayoutManager;
+
+    private MainViewModel mMainViewModel;
+    private Note note;
+    private CheckItem checkItem;
+
+    private ActivityEditNoteBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_note);
+        //setContentView(R.layout.activity_edit_note);
+
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_edit_note);
+
+        mBinding.setListener(this);
+
+        note = new Note();
+        checkItem = new CheckItem();
+        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         Intent intent = getIntent();
         String noteText = intent.getStringExtra(Constants.EXTRA_NOTE_EDITING_TEXT);
         final Uri photoUri = intent.getParcelableExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI);
         ArrayList<CheckItem> checkItemItems = (ArrayList<CheckItem>) intent.getSerializableExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST);
         final int backgroundColorId = intent.getIntExtra(Constants.EXTRA_NOTE_EDITING_COLOR, 0);
-        final int position = intent.getIntExtra(Constants.EXTRA_NOTE_POSITION, 0);
+        final int noteId = intent.getIntExtra(Constants.EXTRA_NOTE_ID, 0);
 
         mEditedNoteET = findViewById(R.id.edit_note_edit_text);
         mEditedPhotoIV = findViewById(R.id.edit_note_image_view);
@@ -65,13 +88,14 @@ public class EditNoteActivity extends AppCompatActivity {
         findViewById(R.id.edit_note_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submit(position);
+                submit(noteId);
             }
         });
 
         mEditedPhotoIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //viewPhoto(mSelectedPhotoUri);
                 viewPhoto();
             }
         });
@@ -96,6 +120,7 @@ public class EditNoteActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 setCardViewColor();
+                setNoteDataBinding();
             }
         });
 
@@ -120,12 +145,20 @@ public class EditNoteActivity extends AppCompatActivity {
         findViewById(R.id.add_new_checklist_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addNewChecklistItem();
+                addNewChecklistItem(noteId);
             }
         });
 
-        editedNoteItems(noteText, photoUri, checkItemItems, backgroundColorId);
+        //editedNoteItems(noteText, photoUri, checkItemItems, backgroundColorId);
+        editedNote(noteId);
+    }
 
+    private void setNoteDataBinding() {
+        note.setNoteText(mEditedNoteET.getText().toString());
+        note.setNotePhotoUri(mSelectedPhotoUri);
+        note.setCheckItem(mItems);
+        note.setNoteColorId(mBackgroundColorId);
+        mBinding.setNote(note);
     }
 
     private void pickPhotoIntent() {
@@ -136,6 +169,51 @@ public class EditNoteActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), PICK_IMAGE);
     }
 
+    private void editedNote(final int noteId) {
+//        mMainViewModel.getNoteInfo(noteId).observe(this, new Observer<Note>() {
+//            @Override
+//            public void onChanged(Note note) {
+
+        note = mMainViewModel.getNoteInfo2(noteId);
+        mSelectedPhotoUri = note.getNotePhotoUri();
+
+//                mEditedNoteET.setText(note.getNoteText());
+
+//                if (note.getNotePhotoUri() != null) {
+//                    setSelectedPhoto(note.getNotePhotoUri());
+//                }
+
+                if (note.getCheckItem() != null) {
+                    if (note.getCheckItem().size() > 0) {
+                        setCheckListItems(noteId);
+                    }
+                }
+
+                switch (note.getNoteColorId()) {
+                    case R.color.white:
+                        mRadioGroup.check(R.id.white_radio_button);
+                        //mCardView.setBackgroundColor(getResources().getColor(note.getNoteColorId()));
+                        break;
+                    case R.color.blue:
+                        mRadioGroup.check(R.id.blue_radio_button);
+                        //mCardView.setBackgroundColor(getResources().getColor(note.getNoteColorId()));
+                        break;
+                    case R.color.red:
+                        mRadioGroup.check(R.id.red_radio_button);
+                        //mCardView.setBackgroundColor(getResources().getColor(note.getNoteColorId()));
+                        break;
+                    case R.color.yellow:
+                        mRadioGroup.check(R.id.yellow_radio_button);
+                        //mCardView.setBackgroundColor(getResources().getColor(note.getNoteColorId()));
+                        break;
+                }
+                mBackgroundColorId = note.getNoteColorId();
+//            }
+//        });
+
+        //setNoteDataBinding();
+        mBinding.setNote(note);
+    }
     /**
      * Shows all note's data (text, photo, or check list) to be edited.
      * @param noteText carry edited note's text.
@@ -148,11 +226,11 @@ public class EditNoteActivity extends AppCompatActivity {
             setSelectedPhoto(photoUri);
         }
 
-        if (checkItemItems != null) {
-            if (checkItemItems.size() > 0) {
-                setCheckListItems(checkItemItems);
-            }
-        }
+//        if (checkItemItems != null) {
+//            if (checkItemItems.size() > 0) {
+//                setCheckListItems(checkItemItems);
+//            }
+//        }
 
         switch (backgroundColorId) {
             case R.color.white:
@@ -180,9 +258,10 @@ public class EditNoteActivity extends AppCompatActivity {
      * @param photoUri is the Uri of selected photo.
      */
     private void setSelectedPhoto(Uri photoUri) {
-        mEditedPhotoIV.setImageURI(photoUri);
-        mEditedPhotoIV.setVisibility(View.VISIBLE);
+        //mEditedPhotoIV.setImageURI(photoUri);
+        //mEditedPhotoIV.setVisibility(View.VISIBLE);
         mSelectedPhotoUri = photoUri;
+        setNoteDataBinding();
     }
 
     /**
@@ -193,27 +272,36 @@ public class EditNoteActivity extends AppCompatActivity {
         switch (checkedRadioButtonId) {
             case R.id.white_radio_button:
                 mBackgroundColorId = R.color.white;
-                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
+                //mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
             case R.id.blue_radio_button:
                 mBackgroundColorId = R.color.blue;
-                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
+                //mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
             case R.id.red_radio_button:
                 mBackgroundColorId = R.color.red;
-                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
+                //mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
             case R.id.yellow_radio_button:
                 mBackgroundColorId = R.color.yellow;
-                mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
+                //mCardView.setBackgroundColor(getResources().getColor(mBackgroundColorId));
                 break;
         }
     }
 
+//    /**
+//     * Start a new activity to display image in a full size.
+//     */
+//    public void viewPhoto(Uri uri) {
+//        Intent intent = new Intent(EditNoteActivity.this, ViewPhotoActivity.class);
+//        intent.putExtra(Constants.EXTRA_PHOTO_VIEW_URI, uri);
+//        startActivityForResult(intent, VIEW_PHOTO);
+//    }
+
     /**
      * Start a new activity to display image in a full size.
      */
-    private void viewPhoto() {
+    public void viewPhoto() {
         Intent intent = new Intent(EditNoteActivity.this, ViewPhotoActivity.class);
         intent.putExtra(Constants.EXTRA_PHOTO_VIEW_URI, mSelectedPhotoUri);
         startActivityForResult(intent, VIEW_PHOTO);
@@ -237,42 +325,68 @@ public class EditNoteActivity extends AppCompatActivity {
      * This method will be called from onActivityResult (after returning from ViewPhotoActivity), if user deleted the image.
      */
     private void removePhoto() {
-        mEditedPhotoIV.setImageURI(null);
-        mEditedPhotoIV.setVisibility(View.GONE);
+//        mEditedPhotoIV.setImageURI(null);
+//        mEditedPhotoIV.setVisibility(View.GONE);
         mSelectedPhotoUri = null;
+        setNoteDataBinding();
     }
 
     /**
-     * Setting note's checkList items.
+     * Setting edited note's checkList items.
      */
-    private void setCheckListItems(ArrayList<CheckItem> checkItem) {
-        mLinearLayout.setVisibility(View.VISIBLE);
+//    private void setCheckListItems(ArrayList<CheckItem> checkItem) {
+    private void setCheckListItems(int noteId) {
+        //mLinearLayout.setVisibility(View.VISIBLE);
 
-        for (int i = 0; i < checkItem.size(); i++) {
-            CheckItem checkItemItems = checkItem.get(i);
-            String checkBoxItemText = checkItemItems.getCheckBoxItemText();
-            boolean checkBoxItemStatus = checkItemItems.getCheckBoxItemStatus();
+//        for (int i = 0; i < checkItem.size(); i++) {
+//            CheckItem checkItemItems = checkItem.get(i);
+//            String checkBoxItemText = checkItemItems.getCheckBoxItemText();
+//            boolean checkBoxItemStatus = checkItemItems.getCheckBoxItemStatus();
+//
+//            addToArrayList(checkBoxItemText, checkBoxItemStatus);
+//        }
 
-            addToArrayList(checkBoxItemText, checkBoxItemStatus);
-        }
+        addToArrayList(noteId);
     }
 
     /**
-     * Adding checkList items to a recyclerView.
+     * Adding checkList items to Database.
      */
-    private void addNewChecklistItem() {
+    public void addNewChecklistItem(int position) {
         String checklistItemText = mAddNewChecklistItemET.getText().toString();
-        boolean checkListItemStatus = false;
+//        boolean checkListItemStatus = false;
+//
+//        addToArrayList(checklistItemText, checkListItemStatus);
 
-        addToArrayList(checklistItemText, checkListItemStatus);
+        checkItem.setNoteId(position);
+        checkItem.setCheckBoxItemText(checklistItemText);
+        checkItem.setCheckBoxItemStatus(false);
+        mMainViewModel.addCheckItem(checkItem);
+
         mAddNewChecklistItemET.setText("");
+
+        addToArrayList(position);
     }
 
-    private void addToArrayList(String checklistItemText, boolean checkListItemStatus) {
-        CheckItem checkItem = new CheckItem(checklistItemText, checkListItemStatus);
-        mItems.add(checkItem);
-        mChecklistAdapter.notifyItemInserted(mItems.size() -1);
+    /**
+     * After adding new Check item, this method will get all check list items to  display them.
+     * @param noteId is the ForeignKey in 'CheckItem' POJO file, to get items of that note.
+     */
+    private void addToArrayList(int noteId) {
+        mMainViewModel.getNoteCheckList(noteId).observe(this, new Observer<List<CheckItem>>() {
+            @Override
+            public void onChanged(List<CheckItem> checkItems) {
+                mChecklistAdapter.updateData(checkItems);
+                mItems = checkItems;
+            }
+        });
     }
+
+//    private void addToArrayList(String checklistItemText, boolean checkListItemStatus) {
+//        CheckItem checkItem = new CheckItem(checklistItemText, checkListItemStatus);
+//        mItems.add(checkItem);
+//        mChecklistAdapter.notifyItemInserted(mItems.size() -1);
+//    }
 
     /**
      * Responding to ClickListener on checkList items and update the status of checkBox item.
@@ -284,24 +398,50 @@ public class EditNoteActivity extends AppCompatActivity {
 
         checkItem.setCheckBoxItemStatus(checkBoxStatus);
 
-        mItems.set(position, checkItem);
-        mChecklistAdapter.notifyDataSetChanged();
+        mMainViewModel.updateCheckItemStatus(checkItem);
+
+//        mItems.set(position, checkItem);
+//        mChecklistAdapter.notifyDataSetChanged();
     }
 
-    private void submit(int position) {
+    public void submit(int noteId) {
         String editedNoteText = mEditedNoteET.getText().toString();
 
-        if (mItems.size() == 0) {
-            mItems = null;
+        if (editedNoteText.isEmpty() && mSelectedPhotoUri == null && mChecklistAdapter.getItemCount() == 0) {
+            mMainViewModel.deleteNote(noteId);
+            finish();
+        } else {
+            if (mItems.size() == 0) {
+                mItems = null;
+            }
         }
 
+//        Intent intent = new Intent();
+//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_TEXT, editedNoteText);
+//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI, mSelectedPhotoUri);
+//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST, mItems);
+//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_COLOR, mBackgroundColorId);
+//        intent.putExtra(Constants.EXTRA_NOTE_POSITION, position);
+//        setResult(RESULT_OK, intent);
+//        finish();
+
+        note.setId(noteId);
+//        note.setNoteText(editedNoteText);
+//        note.setNotePhotoUri(mSelectedPhotoUri);
+//        note.setCheckItem(mItems);
+//        note.setNoteColorId(mBackgroundColorId);
+        setNoteDataBinding();
+        mMainViewModel.updateNote(note);
+
         Intent intent = new Intent();
-        intent.putExtra(Constants.EXTRA_NOTE_EDITING_TEXT, editedNoteText);
-        intent.putExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI, mSelectedPhotoUri);
-        intent.putExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST, mItems);
-        intent.putExtra(Constants.EXTRA_NOTE_EDITING_COLOR, mBackgroundColorId);
-        intent.putExtra(Constants.EXTRA_NOTE_POSITION, position);
+        intent.putExtra(Constants.EXTRA_NOTE_ID, noteId);
         setResult(RESULT_OK, intent);
+
         finish();
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

@@ -10,7 +10,7 @@ public class Constants {
     //Used for intent of chosen background color of note, from 'AddNewActivity'.
     public static final String EXTRA_NOTE_COLOR_NAME = "EXTRA_NOTE_COLOR_NAME_KEY";
     //Used for intent of item position, from 'MainActivity' to 'EditNoteActivity'.
-    public static final String EXTRA_NOTE_POSITION = "EXTRA_NOTE_POSITION_KEY";
+    public static final String EXTRA_NOTE_ID = "EXTRA_NOTE_ID_KEY";
     //Used for intent of text to edit it, from 'MainActivity' to 'EditNoteActivity'.
     public static final String EXTRA_NOTE_EDITING_TEXT = "EXTRA_NOTE_EDITING_TEXT_KEY";
     //Used for intent of photo uri to edit it, from 'MainActivity' to 'EditNoteActivity'.

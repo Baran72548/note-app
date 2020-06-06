@@ -8,19 +8,23 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.barmej.mynote.R;
 import com.barmej.mynote.data.CheckItem;
+import com.barmej.mynote.databinding.ItemCheckListBinding;
 import com.barmej.mynote.listener.CheckBoxClickListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHolder> {
-    private ArrayList<CheckItem> mItems;
+    //private ArrayList<CheckItem> mItems;
+    private List<CheckItem> mItems;
     private CheckBoxClickListener mCheckBoxClickListener;
 
-    public ChecklistAdapter(ArrayList<CheckItem> mItems, CheckBoxClickListener mCheckBoxClickListener) {
+    public ChecklistAdapter(List<CheckItem> mItems, CheckBoxClickListener mCheckBoxClickListener) {
         this.mItems = mItems;
         this.mCheckBoxClickListener = mCheckBoxClickListener;
     }
@@ -28,16 +32,21 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.Chec
     @NonNull
     @Override
     public ChecklistAdapter.ChecklistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list, parent, false);
-        return new ChecklistViewHolder(view, mCheckBoxClickListener);
+        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list, parent, false);
+        ItemCheckListBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_check_list,
+                parent, false);
+        return new ChecklistViewHolder(binding, mCheckBoxClickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ChecklistAdapter.ChecklistViewHolder holder, final int position) {
+        holder.binding.setCheckItem(mItems.get(position));
+
         CheckItem checkItem = mItems.get(position);
-        holder.checkBox.setText(checkItem.getCheckBoxItemText());
+        //holder.checkBox.setText(checkItem.getCheckBoxItemText());
         holder.checkBox.setChecked(checkItem.getCheckBoxItemStatus());
         if (checkItem.getCheckBoxItemStatus()) {
+            //holder.checkBox.setChecked(true);
             holder.checkBox.setPaintFlags(holder.checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -56,12 +65,19 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.Chec
                 int checkBoxPosition = holder.getAdapterPosition();
                 if(isChecked) {
                     holder.checkBox.setPaintFlags(holder.checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    //mItems.get(checkBoxPosition).setCheckBoxItemStatus(false);
+                    holder.binding.setCheckItem(mItems.get(checkBoxPosition));
+                    holder.checkBox.setChecked(mItems.get(checkBoxPosition).getCheckBoxItemStatus());
                 } else {
                     if ((holder.checkBox.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
                         holder.checkBox.setPaintFlags( holder.checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
                     }
+                    holder.binding.setCheckItem(mItems.get(checkBoxPosition));
+                    holder.checkBox.setChecked(mItems.get(checkBoxPosition).getCheckBoxItemStatus());
+                    //mItems.get(checkBoxPosition).setCheckBoxItemStatus(true);
                 }
                 mCheckBoxClickListener.onCheckBoxClickListener(checkBoxPosition, isChecked);
+                holder.binding.setCheckItem(mItems.get(checkBoxPosition));
             }
         });
     }
@@ -75,9 +91,21 @@ public class ChecklistAdapter extends RecyclerView.Adapter<ChecklistAdapter.Chec
         private int position;
         CheckBox checkBox;
 
-        public ChecklistViewHolder(@NonNull View itemView, final CheckBoxClickListener mCheckBoxClickListener) {
-            super(itemView);
+        private final ItemCheckListBinding binding;
+
+        public ChecklistViewHolder(ItemCheckListBinding binding, final CheckBoxClickListener mCheckBoxClickListener) {
+            super(binding.getRoot());
+            this.binding = binding;
             checkBox = itemView.findViewById(R.id.note_checkbox);
         }
+    }
+
+    public void updateData(List<CheckItem> checkItems) {
+        this.mItems = checkItems;
+        notifyDataSetChanged();
+    }
+
+    public CheckItem getItemAtPosition(int position) {
+        return mItems.get(position);
     }
 }
