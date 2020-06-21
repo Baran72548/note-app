@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CheckItemsConverter {
@@ -21,9 +20,5 @@ public class CheckItemsConverter {
     public static String fromArrayList(List<CheckItem> list) {
         Type type = new TypeToken<List<CheckItem>>(){}.getType();
         return new Gson().toJson(list, type);
-
-//        String[] arrayListString = new String[list.size()];
-//        arrayListString = list.toArray(arrayListString);
-//        return arrayListString;
     }
 }

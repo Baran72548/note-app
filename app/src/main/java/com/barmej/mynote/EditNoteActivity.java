@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,7 +28,7 @@ import com.barmej.mynote.listener.CheckBoxClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditNoteActivity extends AppCompatActivity {
     EditText mEditedNoteET;
     ImageView mEditedPhotoIV;
     Uri mSelectedPhotoUri = null;
@@ -63,8 +62,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         //setContentView(R.layout.activity_edit_note);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_edit_note);
-
-        mBinding.setListener(this);
 
         note = new Note();
         checkItem = new CheckItem();
@@ -131,7 +128,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 new CheckBoxClickListener() {
                     @Override
                     public void onCheckBoxClickListener(int position, boolean checkBoxStatus) {
-                        onCheckListItemClicked(position, checkBoxStatus);
+                        onCheckListItemClicked(position, checkBoxStatus, noteId);
                     }
                 });
 
@@ -153,6 +150,9 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         editedNote(noteId);
     }
 
+    /**
+     * Setting note's data for binding.
+     */
     private void setNoteDataBinding() {
         note.setNoteText(mEditedNoteET.getText().toString());
         note.setNotePhotoUri(mSelectedPhotoUri);
@@ -169,12 +169,17 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), PICK_IMAGE);
     }
 
+    /**
+     * تغيير المسمى كالدالة السابقة
+     * Get note's info from database based on selected note's Id.
+     */
     private void editedNote(final int noteId) {
 //        mMainViewModel.getNoteInfo(noteId).observe(this, new Observer<Note>() {
 //            @Override
 //            public void onChanged(Note note) {
 
-        note = mMainViewModel.getNoteInfo2(noteId);
+
+        note = mMainViewModel.getNoteInfo(noteId);
         mSelectedPhotoUri = note.getNotePhotoUri();
 
 //                mEditedNoteET.setText(note.getNoteText());
@@ -185,7 +190,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
                 if (note.getCheckItem() != null) {
                     if (note.getCheckItem().size() > 0) {
-                        setCheckListItems(noteId);
+                        addToArrayList(noteId);
+                        //setCheckListItems(noteId);
                     }
                 }
 
@@ -254,7 +260,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /**
-     * This method will be called to show the edited or added photo.
+     * This method will be called to show the added photo.
      * @param photoUri is the Uri of selected photo.
      */
     private void setSelectedPhoto(Uri photoUri) {
@@ -369,7 +375,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /**
-     * After adding new Check item, this method will get all check list items to  display them.
+     * After adding new Check item, this method will gets all check list items to  display them.
      * @param noteId is the ForeignKey in 'CheckItem' POJO file, to get items of that note.
      */
     private void addToArrayList(int noteId) {
@@ -393,15 +399,24 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
      * @param position of clicked item.
      * @param checkBoxStatus isChecked value of checkBox.
      */
-    private void onCheckListItemClicked(int position, boolean checkBoxStatus) {
+    private void onCheckListItemClicked(int position, boolean checkBoxStatus, int noteId) {
         CheckItem checkItem = mItems.get(position);
 
         checkItem.setCheckBoxItemStatus(checkBoxStatus);
 
         mMainViewModel.updateCheckItemStatus(checkItem);
 
+//        mMainViewModel.getNoteCheckList(noteId).observe(this, new Observer<List<CheckItem>>() {
+//            @Override
+//            public void onChanged(List<CheckItem> checkItems) {
+//                mChecklistAdapter.updateData(checkItems);
+//                mItems = checkItems;
+//            }
+//        });
+
 //        mItems.set(position, checkItem);
-//        mChecklistAdapter.notifyDataSetChanged();
+//        //mChecklistAdapter.notifyDataSetChanged();
+//        mChecklistAdapter.notifyItemChanged(position);
     }
 
     public void submit(int noteId) {
@@ -438,10 +453,5 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         setResult(RESULT_OK, intent);
 
         finish();
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 }

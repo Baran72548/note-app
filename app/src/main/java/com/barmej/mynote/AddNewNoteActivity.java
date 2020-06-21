@@ -34,6 +34,7 @@ import com.barmej.mynote.data.viewmodel.MainViewModel;
 import com.barmej.mynote.databinding.ActivityAddNewNoteBinding;
 import com.barmej.mynote.listener.CheckBoxClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddNewNoteActivity extends AppCompatActivity implements View.OnClickListener {
@@ -61,7 +62,6 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
 
     RecyclerView.LayoutManager mListLayoutManager;
 
-    private DataRepository mDataRepository;
     private MainViewModel mMainViewModel;
 
     private int noteId;
@@ -89,7 +89,6 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         note = new Note();
         checkItem = new CheckItem();
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mDataRepository = DataRepository.getInstance(getApplicationContext());
 
         mNoteAdapter = new NoteAdapter();
 
@@ -133,7 +132,8 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
 
         //In case of adding a new list item, we need to make a recyclerView to display items in it.
         mRecyclerView = findViewById(R.id.checklist_recycler_view);
-        mItems = CheckItem.getChecklistList();
+        //mItems = CheckItem.getChecklistList();
+        mItems = new ArrayList<>();
         mChecklistAdapter = new ChecklistAdapter(mItems,
                 new CheckBoxClickListener() {
                     @Override
@@ -160,11 +160,17 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         mBinding.setNote(note);
     }
 
-    private int addNote() {
+    /**
+     * Set note's data then add them to database.
+     */
+    private void addNote() {
         setNoteDataBinding();
-        return noteId = (int)mMainViewModel.addNoteInfo(note);
+        noteId = (int)mMainViewModel.addNoteInfo(note);
     }
 
+    /**
+     * Setting note's data for binding.
+     */
     private void setNoteDataBinding() {
         note.setNoteText(mEditText.getText().toString());
         note.setNotePhotoUri(mSelectedPhotoUri);
@@ -309,8 +315,9 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         mMainViewModel.getNoteCheckList(noteId).observe(this, new Observer<List<CheckItem>>() {
             @Override
             public void onChanged(List<CheckItem> checkItems) {
-                mChecklistAdapter.updateData(checkItems);
+                //mChecklistAdapter.updateData(checkItems);
                 mItems = checkItems;
+                mChecklistAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -368,6 +375,9 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    /**
+     * Update note's info in database.
+     */
     @Override
     public void onClick(View view) {
         if (mEditText.getText().toString().isEmpty() && mSelectedPhotoUri == null && mChecklistAdapter.getItemCount() == 0) {

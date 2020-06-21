@@ -25,7 +25,6 @@ public class MainViewModel extends AndroidViewModel {
 
         mDataRepository = DataRepository.getInstance(application);
         mNotes = mDataRepository.getAllNotes();
-        //mCheckItems = mDataRepository.getAllCheckItems();
     }
 
 //    public ArrayList<Note> getNotes() {
@@ -36,12 +35,8 @@ public class MainViewModel extends AndroidViewModel {
         return mNotes;
     }
 
-    public LiveData<Note> getNoteInfo(long id) {
-        mNoteInfo = mDataRepository.getNoteInfo(id);
-        return mNoteInfo;
-    }
-    public Note getNoteInfo2(long id) {
-        Note noteInfo = mDataRepository.getNoteInfo2(id);
+    public Note getNoteInfo(long id) {
+        Note noteInfo = mDataRepository.getNoteInfo(id);
         return noteInfo;
     }
 

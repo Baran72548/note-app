@@ -19,7 +19,6 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
     Uri mPhotoUri;
 
     private Note mNote;
-    private int noteId;
 
     MainViewModel mMainViewModel;
 
@@ -70,7 +69,7 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
      */
     public void deletePhoto(View view) {
         //mPhotoUri = null;
-        mNote.setId(noteId);
+        //mNote.setId(noteId);
         mNote.setNotePhotoUri(null);
         mMainViewModel.updateNote(mNote);
 
@@ -79,6 +78,9 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
         finish();
     }
 
+    /**
+     * Delete uploaded image.
+     */
     @Override
     public void onClick(View view) {
         //mPhotoUri = null;

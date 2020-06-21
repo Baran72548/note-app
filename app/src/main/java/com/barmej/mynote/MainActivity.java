@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private NoteAdapter mAdapter;
     //private ArrayList<Note> mItems;
     private AppDatabase mAppDatabase;
-    private DataRepository mDataRepository;
     private MainViewModel mMainViewModel;
 
     private Note mNote;
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         mAppDatabase = AppDatabase.getInstance(this);
-        mDataRepository = DataRepository.getInstance(getApplicationContext());
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         mCheckItemItems = CheckItem.getChecklistList();
@@ -161,8 +159,10 @@ public class MainActivity extends AppCompatActivity {
 //        mAppDatabase.noteInfoDao().addNoteInfo(note);
 //    }
 
+    /**
+     * Get all notes from database to display them in main activity.
+     */
     private void getAllNotes() {
-        //mItems =
         mMainViewModel.getNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(List<Note> notes) {
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This method will be called in case of click on a recyclerView item.
-     * @param position will be needed to save the position of an item on the list.
+     * @param position will be needed to get note's info in that position and edit it.
      */
     private void editItem(int position) {
 //        Note note = mItems.get(position);
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * This method will be called in case of long click on a recyclerView item.
-     * @param position is the index of item to deleted from the list.
+     * @param position is the index of item to get it and delete it from database.
      */
     private void deleteItem(final int position) {
         AlertDialog alertDialog = new AlertDialog.Builder(this)
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mNote = mAdapter.getNoteAtPosition(position);
-                        mDataRepository.deleteNote(mNote.getId());
+                        mMainViewModel.deleteNote(mNote.getId());
                         Log.i("delete note", "note deleted" + mNote);
 //                        mItems.remove(position);
 //                        mAdapter.notifyItemRemoved(position);

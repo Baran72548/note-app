@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
 
         <import type="androidx.core.content.ContextCompat" />
@@ -16,10 +15,6 @@
         <variable
             name="note"
             type="com.barmej.mynote.data.Note" />
-
-        <variable
-            name="listener"
-            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -89,7 +84,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_check_box" />
-            <!--            android:onClick="@={note.checkItem != null ? View.VISIBLE : View.GONE}"/>-->
 
             <ImageButton
                 android:id="@+id/photo_image_button"
@@ -128,7 +122,8 @@
             <EditText
                 android:id="@+id/edit_note_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintHeight_min="100dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
@@ -153,14 +148,14 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_launcher_background"
+                tools:srcCompat="@drawable/ic_launcher_background"
                 tools:visibility="visible" />
-            <!--            android:onClick="@{() -> editNoteActivity.viewPhoto(note.notePhotoUri)}"/>-->
 
             <LinearLayout
                 android:id="@+id/checklist_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constrainedHeight="true"
                 android:orientation="vertical"
                 android:visibility="@{note.checkItem != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -173,6 +168,7 @@
                     android:id="@+id/checklist_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="8dp"
@@ -209,7 +205,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-            <!--                android:onClick="@{(v) -> listener.onClick(v, note.id)}"/>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
