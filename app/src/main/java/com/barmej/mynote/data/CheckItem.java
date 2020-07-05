@@ -16,10 +16,11 @@ import static androidx.room.ForeignKey.CASCADE;
 //public class CheckItem implements Serializable {
 //@Entity(tableName = "check_list_info")
 public class CheckItem {
+
     @PrimaryKey(autoGenerate = true)
-    private int id = 0;
+    private long id;
     @SerializedName("note_id")
-    private int noteId = 0;
+    private long noteId = 0;
     @SerializedName("checkBox_text")
     private String checkBoxItemText;
     @SerializedName("checkBox_status")
@@ -32,19 +33,19 @@ public class CheckItem {
 //    }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getNoteId() {
+    public long getNoteId() {
         return noteId;
     }
 
-    public void setNoteId(int noteId) {
+    public void setNoteId(long noteId) {
         this.noteId = noteId;
     }
 

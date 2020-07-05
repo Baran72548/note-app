@@ -62,7 +62,7 @@ public class DataRepository {
     /**
      * Delete note info from database task.
      */
-    public void deleteNote(int id) {
+    public void deleteNote(long id) {
         new deleteAsyncTask(mNoteInfoDao).execute(id);
         //mAppDatabase.noteInfoDao().deleteNoteInfo(id);
     }
@@ -101,7 +101,7 @@ public class DataRepository {
     /**
      * Delete note info from database task.
      */
-    private static class deleteAsyncTask extends AsyncTask<Integer, Void, Void> {
+    private static class deleteAsyncTask extends AsyncTask<Long, Void, Void> {
         private NoteInfoDao noteInfoDao;
 
         deleteAsyncTask(NoteInfoDao noteInfoDao) {
@@ -109,7 +109,7 @@ public class DataRepository {
         }
 
         @Override
-        protected Void doInBackground(Integer... noteId) {
+        protected Void doInBackground(Long... noteId) {
             noteInfoDao.deleteNoteInfo(noteId[0]);
             return null;
         }
@@ -117,7 +117,7 @@ public class DataRepository {
 
 
 
-    public LiveData<List<CheckItem>> getNoteCheckItems(int noteId) {
+    public LiveData<List<CheckItem>> getNoteCheckItems(long noteId) {
         return mAppDatabase.checkListDao().getCheckListItems(noteId);
     }
 

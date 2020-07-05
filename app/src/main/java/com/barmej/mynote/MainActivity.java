@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 //        startActivityForResult(intent, EDIT_NOTE);
 
         Note note = mAdapter.getNoteAtPosition(position);
-        int noteId = note.getId();
+        long noteId = note.getId();
         Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
         intent.putExtra(Constants.EXTRA_NOTE_ID, noteId);
         startActivity(intent);

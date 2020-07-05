@@ -27,5 +27,5 @@ public interface NoteInfoDao {
     void updateNoteInfo(Note note);
 
     @Query("DELETE FROM note_info where id = :id")
-    void deleteNoteInfo(int id);
+    void deleteNoteInfo(long id);
 }

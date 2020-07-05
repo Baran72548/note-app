@@ -36,8 +36,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public Note getNoteInfo(long id) {
-        Note noteInfo = mDataRepository.getNoteInfo(id);
-        return noteInfo;
+        return mDataRepository.getNoteInfo(id);
     }
 
     public long addNoteInfo(Note note) {
@@ -48,12 +47,12 @@ public class MainViewModel extends AndroidViewModel {
         mDataRepository.updateNote(note);
     }
 
-    public void deleteNote(int id) {
+    public void deleteNote(long id) {
         mDataRepository.deleteNote(id);
     }
 
 
-    public LiveData<List<CheckItem>> getNoteCheckList(int noteId) {
+    public LiveData<List<CheckItem>> getNoteCheckList(long noteId) {
         return mDataRepository.getNoteCheckItems(noteId);
     }
 

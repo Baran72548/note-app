@@ -64,7 +64,7 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
 
     private MainViewModel mMainViewModel;
 
-    private int noteId;
+    private long noteId;
     private Note note;
     private CheckItem checkItem;
 
@@ -86,8 +86,6 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         mCardView = findViewById(R.id.activity_card_view_background_color);
         mLinearLayout = findViewById(R.id.checklist_layout);
 
-        note = new Note();
-        checkItem = new CheckItem();
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         mNoteAdapter = new NoteAdapter();
@@ -143,7 +141,6 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
                 });
 
         mListLayoutManager = new LinearLayoutManager(this);
-
         mRecyclerView.setLayoutManager(mListLayoutManager);
         mRecyclerView.setAdapter(mChecklistAdapter);
 
@@ -156,8 +153,9 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        addNote();
+        note = new Note();
         mBinding.setNote(note);
+        addNote();
     }
 
     /**
@@ -165,7 +163,17 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
      */
     private void addNote() {
         setNoteDataBinding();
-        noteId = (int)mMainViewModel.addNoteInfo(note);
+        noteId =  mMainViewModel.addNoteInfo(note);
+        mMainViewModel.getNoteCheckList(noteId).observe(this, new Observer<List<CheckItem>>() {
+            @Override
+            public void onChanged(List<CheckItem> checkItems) {
+                //mChecklistAdapter.updateData(checkItems);
+                mItems.clear();
+                mItems.addAll(checkItems);
+                mChecklistAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     /**
@@ -285,10 +293,10 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
      * Adding checkList items to Database.
      */
     private void addNewChecklistItem() {
-        String checklistItemText = mAddNewChecklistItemET.getText().toString();
 
+        checkItem = new CheckItem();
         checkItem.setNoteId(noteId);
-        checkItem.setCheckBoxItemText(checklistItemText);
+        checkItem.setCheckBoxItemText(mAddNewChecklistItemET.getText().toString());
         checkItem.setCheckBoxItemStatus(false);
         mMainViewModel.addCheckItem(checkItem);
 
@@ -303,23 +311,18 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
 //
 //        mItems.add(checkItem);
 //        mChecklistAdapter.notifyItemInserted(mItems.size() -1);
+
         mAddNewChecklistItemET.setText("");
         addToArrayList(noteId);
+
     }
 
     /**
      * After adding new Check item, this method will get all check list items to  display them.
      * @param noteId is the ForeignKey in 'CheckItem' POJO file, to get items of that note.
      */
-    private void addToArrayList(int noteId) {
-        mMainViewModel.getNoteCheckList(noteId).observe(this, new Observer<List<CheckItem>>() {
-            @Override
-            public void onChanged(List<CheckItem> checkItems) {
-                //mChecklistAdapter.updateData(checkItems);
-                mItems = checkItems;
-                mChecklistAdapter.notifyDataSetChanged();
-            }
-        });
+    private void addToArrayList(long noteId) {
+
     }
 
     /**
