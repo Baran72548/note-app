@@ -26,7 +26,6 @@ import com.barmej.mynote.data.DataRepository;
 import com.barmej.mynote.data.Note;
 import com.barmej.mynote.data.database.AppDatabase;
 import com.barmej.mynote.data.viewmodel.MainViewModel;
-//import com.barmej.mynote.databinding.ActivityMainBinding;
 import com.barmej.mynote.listener.ItemClickListener;
 import com.barmej.mynote.listener.ItemLongClickListener;
 
@@ -50,28 +49,18 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.LayoutManager mListLayoutManager;
     RecyclerView.LayoutManager mStaggeredGridLayoutManager;
 
-    private static final int ADD_NOTE = 130;
-    private static final int EDIT_NOTE = 140;
-
-    //private ActivityMainBinding mBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
         mAppDatabase = AppDatabase.getInstance(this);
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        mCheckItemItems = CheckItem.getChecklistList();
+        mCheckItemItems = new ArrayList<>();
 
         mRecyclerView = findViewById(R.id.recycler_view);
-//        mItems = Note.getDefaultList();
         mItems = new ArrayList<>();
-//        mItems = mAppDatabase.noteInfoDao().getNoteInfo();
-//        mItems = mMainViewModel.getNotes();
         mAdapter = new NoteAdapter(mItems,
                 new ItemClickListener() {
                     @Override
@@ -84,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemLongClickListener(int position) {
                         deleteItem(position);
                     }
-                },
-                this);
+                });
 
         mListLayoutManager = new LinearLayoutManager(this);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -93,13 +81,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         getAllNotes();
-
-//        findViewById(R.id.floating_button_add).setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                startAddNewNoteActivity();
-//            }
-//        });
     }
 
     /**
@@ -107,57 +88,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void startAddNewNoteActivity(View view) {
         Intent intent = new Intent(MainActivity.this, AddNewNoteActivity.class);
-        //startActivityForResult(intent, ADD_NOTE);
         startActivity(intent);
-        //getAllNotes();
     }
-
-    /**
-     * Getting the results in case of adding a new item or editing the item.
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_NOTE) {
-            if (resultCode == RESULT_OK && data != null) {
-//                String noteText = data.getStringExtra(Constants.EXTRA_NOTE_TEXT);
-//                Uri photoUri = data.getParcelableExtra(Constants.EXTRA_NOTE_PHOTO_URI);
-//                ArrayList<CheckItem> checkItemItems = (ArrayList) data.getSerializableExtra(Constants.EXTRA_NOTE_CHECKLIST);
-//                int backgroundColorId = data.getIntExtra(Constants.EXTRA_NOTE_COLOR_NAME, 0);
-//
-//                Note note = new Note(noteText, photoUri, checkItemItems, backgroundColorId);
-//                addNewItem(note);
-
-                getAllNotes();
-            }
-        } else if (requestCode == EDIT_NOTE) {
-            if (resultCode == RESULT_OK && data != null) {
-//                String noteText = data.getStringExtra(Constants.EXTRA_NOTE_EDITING_TEXT);
-//                Uri photoUri = data.getParcelableExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI);
-//                ArrayList<CheckItem> checkItemItems = (ArrayList) data.getSerializableExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST);
-//                int backgroundColorId = data.getIntExtra(Constants.EXTRA_NOTE_EDITING_COLOR, 0);
-//                int position = data.getIntExtra(Constants.EXTRA_NOTE_POSITION, 0);
-//
-//                if (noteText.isEmpty() && photoUri == null && checkItemItems.size() == 0) {
-//                        deleteItem(position);
-//                } else {
-//                    Note note = new Note(noteText, photoUri, checkItemItems, backgroundColorId);
-//                    updateItem(note, position);
-//                }
-
-            }
-        }
-    }
-
-//    /**
-//     * This method will be called from onActivityResult() to add new item (text, photo, or check list).
-//     * @param note will carry data of String, Uri, or ArrayList.
-//     */
-//    private void addNewItem(Note note) {
-//        mItems.add(note);
-//        mAdapter.notifyItemInserted(mItems.size() - 1);
-//        mAppDatabase.noteInfoDao().addNoteInfo(note);
-//    }
 
     /**
      * Get all notes from database to display them in main activity.
@@ -170,22 +102,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Adapter.. ", String.valueOf(mAdapter));
             }
         });
-
-//        mAdapter = new NoteAdapter(mItems,
-//                new ItemClickListener() {
-//                    @Override
-//                    public void onItemClickListener(int position) {
-//                        editItem(position);
-//                    }
-//                },
-//                new ItemLongClickListener() {
-//                    @Override
-//                    public void onItemLongClickListener(int position) {
-//                        deleteItem(position);
-//                    }
-//                },
-//                this);
-//        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -193,36 +109,12 @@ public class MainActivity extends AppCompatActivity {
      * @param position will be needed to get note's info in that position and edit it.
      */
     private void editItem(int position) {
-//        Note note = mItems.get(position);
-//        String noteText = note.getNoteText();
-//        Uri photoUri = note.getNotePhoto();
-//        ArrayList<CheckItem> checkItemItems = note.getCheckItem();
-//        int backgroundColorId = note.getNoteColorId();
-//
-//        Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
-//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_TEXT, noteText);
-//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_PHOTO_URI, photoUri);
-//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_CHECKLIST, checkItemItems);
-//        intent.putExtra(Constants.EXTRA_NOTE_EDITING_COLOR, backgroundColorId);
-//        intent.putExtra(Constants.EXTRA_NOTE_POSITION, position);
-//        startActivityForResult(intent, EDIT_NOTE);
-
         Note note = mAdapter.getNoteAtPosition(position);
-        int noteId = note.getId();
+        //int noteId = note.getId();
+        long noteId = note.getId();
         Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
         intent.putExtra(Constants.EXTRA_NOTE_ID, noteId);
         startActivity(intent);
-    }
-
-    /**
-     * This method will be called from onActivityResult() to update item data (text, photo, or check list)
-     * in specific position.
-     * @param note will carry updated data of String, Uri, or ArrayList.
-     * @param position is the index of updated item on the list.
-     */
-    private void updateItem(Note note, int position) {
-        mItems.set(position, note);
-        mAdapter.notifyItemChanged(position);
     }
 
     /**
@@ -238,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
                         mNote = mAdapter.getNoteAtPosition(position);
                         mMainViewModel.deleteNote(mNote.getId());
                         Log.i("delete note", "note deleted" + mNote);
-//                        mItems.remove(position);
-//                        mAdapter.notifyItemRemoved(position);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

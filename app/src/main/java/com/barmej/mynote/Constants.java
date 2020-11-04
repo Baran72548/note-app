@@ -22,4 +22,5 @@ public class Constants {
     //Used for intent of photo uri to view it or delete it, from 'AddNewActivity' and 'EditNoteActivity' to 'ViewPhotoActivity'.
     public static final String EXTRA_PHOTO_VIEW_URI = "EXTRA_PHOTO_VIEW_URI_KEY";
     public static final String EXTRA_NULL_PHOTO_URI = "EXTRA_NULL_PHOTO_URI";
+    public static final String EXTRA_DIFFUTIL_BUNDLE = "EXTRA_DIFFUTIL_BUNDLE";
 }

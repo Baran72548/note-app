@@ -5,9 +5,11 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.barmej.mynote.listener.OnNoteAddListener;
 import com.barmej.mynote.data.database.AppDatabase;
 import com.barmej.mynote.data.database.dao.CheckListDao;
 import com.barmej.mynote.data.database.dao.NoteInfoDao;
+import com.barmej.mynote.listener.OnNoteGetListener;
 
 import java.util.List;
 
@@ -44,47 +46,58 @@ public class DataRepository {
     }
 
     /**
+     * .. Notes Tasks ..
+     */
+
+//    public LiveData<Note> getNoteInfo(long id) {
+//        return mAppDatabase.noteInfoDao().getNoteInfo(id);
+//    }
+
+//    public void getNoteInfo(long id, OnNoteGetListener onNoteGetListener) {
+//        new getNoteAsyncTask(mNoteInfoDao, onNoteGetListener).execute(id);
+//    }
+
+    /**
      * Insert note info into database.
      */
-    public Long addNote(Note note) {
+    public void addNote(Note note, OnNoteAddListener onNoteAddListener) {
         //return new addAsyncTask(mNoteInfoDao).execute(note);
-        return mAppDatabase.noteInfoDao().addNoteInfo(note);
+        new addAsyncTask(mNoteInfoDao, onNoteAddListener).execute(note);
+      //  long id =  mAppDatabase.noteInfoDao().addNoteInfo(note);
     }
+
+    private static class addAsyncTask extends AsyncTask<Note, Void, Long> {
+        private NoteInfoDao noteInfoDao;
+        private OnNoteAddListener onNoteAddListener;
+
+        public addAsyncTask(NoteInfoDao noteInfoDao, OnNoteAddListener onNoteAddListener) {
+            this.noteInfoDao = noteInfoDao;
+            this.onNoteAddListener = onNoteAddListener;
+        }
+
+        @Override
+        protected Long doInBackground(Note... notes) {
+            return noteInfoDao.addNoteInfo(notes[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Long noteId) {
+            onNoteAddListener.onNoteAdded(noteId);
+        }
+    }
+
+//    public long addNote(Note note) {
+//       // return new addAsyncTask(mNoteInfoDao).execute(note);
+//         return  mAppDatabase.noteInfoDao().addNoteInfo(note);
+//    }
 
     /**
      * Update note info.
      */
     public void updateNote(Note note) {
         new updateAsyncTask(mNoteInfoDao).execute(note);
-        //mAppDatabase.noteInfoDao().updateNoteInfo(note);
     }
 
-    /**
-     * Delete note info from database task.
-     */
-    public void deleteNote(int id) {
-        new deleteAsyncTask(mNoteInfoDao).execute(id);
-        //mAppDatabase.noteInfoDao().deleteNoteInfo(id);
-    }
-
-    /**
-     * Insert note info int database task.
-     */
-    private static class addAsyncTask extends AsyncTask<Note, Void, Long> {
-        private NoteInfoDao noteInfoDao;
-
-        addAsyncTask(NoteInfoDao noteInfoDao) {
-            this.noteInfoDao = noteInfoDao;
-        }
-        @Override
-        protected Long doInBackground(Note... notes) {
-            return noteInfoDao.addNoteInfo(notes[0]);
-        }
-    }
-
-    /**
-     * Update note info task.
-     */
     private static class updateAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteInfoDao noteInfoDao;
 
@@ -101,7 +114,11 @@ public class DataRepository {
     /**
      * Delete note info from database task.
      */
-    private static class deleteAsyncTask extends AsyncTask<Integer, Void, Void> {
+    public void deleteNote(long id) {
+        new deleteAsyncTask(mNoteInfoDao).execute(id);
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Long, Void, Void> {
         private NoteInfoDao noteInfoDao;
 
         deleteAsyncTask(NoteInfoDao noteInfoDao) {
@@ -109,34 +126,53 @@ public class DataRepository {
         }
 
         @Override
-        protected Void doInBackground(Integer... noteId) {
+        protected Void doInBackground(Long... noteId) {
             noteInfoDao.deleteNoteInfo(noteId[0]);
             return null;
         }
     }
 
+    /**
+     * Get note info from database task.
+     */
+//    private static class getNoteAsyncTask extends AsyncTask<Long, Void, Note> {
+//        private NoteInfoDao noteInfoDao;
+//        private OnNoteGetListener onNoteGetListener;
+//
+//        public getNoteAsyncTask(NoteInfoDao noteInfoDao, OnNoteGetListener onNoteGetListener) {
+//            this.noteInfoDao = noteInfoDao;
+//            this.onNoteGetListener = onNoteGetListener;
+//        }
+//
+//        @Override
+//        protected Note doInBackground(Long... longs) {
+//            Log.i("newNote", String.valueOf(longs));
+//            return noteInfoDao.getNoteInfo(longs[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Note note) {
+//            onNoteGetListener.onNoteGutted(note);
+//        }
+//    }
 
 
-    public LiveData<List<CheckItem>> getNoteCheckItems(int noteId) {
-        return mAppDatabase.checkListDao().getCheckListItems(noteId);
-    }
 
     /**
-     * Update checkList item status.
+     * .. CheckList Tasks ..
      */
-    public void updateCheckItemStatus(CheckItem checkItem) {
-        new updateCheckItemAsyncTask(mCheckListDao).execute(checkItem);
-        //mAppDatabase.checkListDao().updateCheckItemStatus(checkItem);
-    }
 
-    public void addCheckItem(CheckItem checkItem) {
-        new addCheckItemAsyncTask(mCheckListDao).execute(checkItem);
-        //mAppDatabase.checkListDao().addCheckItem(checkItem);
+    public LiveData<List<CheckItem>> getNoteCheckItems(long noteId) {
+        return mAppDatabase.checkListDao().getCheckListItems(noteId);
     }
 
     /**
      * Update checkList item status task.
      */
+    public void updateCheckItemStatus(CheckItem checkItem) {
+        new updateCheckItemAsyncTask(mCheckListDao).execute(checkItem);
+    }
+
     private static class updateCheckItemAsyncTask extends AsyncTask<CheckItem, Void, Void> {
         private CheckListDao checkListDao;
 
@@ -153,6 +189,10 @@ public class DataRepository {
     /**
      * Insert checklist item info into database task.
      */
+    public void addCheckItem(CheckItem checkItem) {
+        new addCheckItemAsyncTask(mCheckListDao).execute(checkItem);
+    }
+
     private static class addCheckItemAsyncTask extends AsyncTask<CheckItem, Void, Void> {
         private CheckListDao checkListDao;
 

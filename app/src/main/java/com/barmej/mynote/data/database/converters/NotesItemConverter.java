@@ -11,8 +11,7 @@ public class NotesItemConverter {
         if (value == null) {
             return null;
         } else {
-            Uri uri = Uri.parse(value);
-            return uri;
+            return Uri.parse(value);
         }
     }
 
@@ -21,8 +20,7 @@ public class NotesItemConverter {
         if (uri == null) {
             return null;
         } else {
-            String stringUri = uri.toString();
-            return stringUri;
+            return uri.toString();
         }
     }
 }

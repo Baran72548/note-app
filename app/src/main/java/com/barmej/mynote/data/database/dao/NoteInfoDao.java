@@ -20,6 +20,9 @@ public interface NoteInfoDao {
     @Query("SELECT * FROM note_info where id = :id LIMIT 1")
     Note getNoteInfo(long id);
 
+//    @Query("SELECT * FROM note_info where id = :id LIMIT 1")
+//    LiveData<Note> getNoteInfo(long id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long addNoteInfo(Note note);
 
@@ -27,5 +30,5 @@ public interface NoteInfoDao {
     void updateNoteInfo(Note note);
 
     @Query("DELETE FROM note_info where id = :id")
-    void deleteNoteInfo(int id);
+    void deleteNoteInfo(long id);
 }

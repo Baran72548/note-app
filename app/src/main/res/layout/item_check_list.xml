@@ -23,6 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{checkItem.checkBoxItemText}"
+            android:checked="@{checkItem.checkBoxItemStatus}"
+            app:paintFlag="@{checkItem.checkBoxItemStatus}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_note_edit_text" />

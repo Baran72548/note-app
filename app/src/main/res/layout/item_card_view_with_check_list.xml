@@ -55,7 +55,8 @@
                 tools:visibility="visible"
                 android:clickable="false"
                 android:text="@{note.checkItem[0].checkBoxItemText}"
-                android:checked="@{note.checkItem[0].checkBoxItemStatus}"/>
+                android:checked="@{note.checkItem[0].checkBoxItemStatus}"
+                app:paintFlag="@{note.checkItem[0].checkBoxItemStatus}" />
 
             <CheckBox
                 android:id="@+id/item_note_checkbox_2"
@@ -65,7 +66,8 @@
                 tools:visibility="visible"
                 android:clickable="false"
                 android:text="@{note.checkItem[1].checkBoxItemText}"
-                android:checked="@{note.checkItem[1].checkBoxItemStatus}"/>
+                android:checked="@{note.checkItem[1].checkBoxItemStatus}"
+                app:paintFlag="@{note.checkItem[1].checkBoxItemStatus}" />
 
             <CheckBox
                 android:id="@+id/item_note_checkbox_3"
@@ -75,7 +77,8 @@
                 tools:visibility="visible"
                 android:clickable="false"
                 android:text="@{note.checkItem[2].checkBoxItemText}"
-                android:checked="@{note.checkItem[2].checkBoxItemStatus}" />
+                android:checked="@{note.checkItem[2].checkBoxItemStatus}"
+                app:paintFlag="@{note.checkItem[2].checkBoxItemStatus}" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

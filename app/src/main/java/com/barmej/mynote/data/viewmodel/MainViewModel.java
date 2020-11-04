@@ -6,9 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.barmej.mynote.listener.OnNoteAddListener;
 import com.barmej.mynote.data.CheckItem;
 import com.barmej.mynote.data.DataRepository;
 import com.barmej.mynote.data.Note;
+import com.barmej.mynote.listener.OnNoteGetListener;
 
 import java.util.List;
 
@@ -40,20 +42,32 @@ public class MainViewModel extends AndroidViewModel {
         return noteInfo;
     }
 
-    public long addNoteInfo(Note note) {
-        return mDataRepository.addNote(note);
+//    public LiveData<Note> getNoteInfo(long id) {
+//        return mDataRepository.getNoteInfo(id);
+//    }
+
+//    public void getNoteInfo(long id, OnNoteGetListener onNoteGetListener) {
+//        mDataRepository.getNoteInfo(id, onNoteGetListener);
+//    }
+
+    public void addNoteInfo(Note note, OnNoteAddListener onNoteAddListener) {
+         mDataRepository.addNote(note, onNoteAddListener);
     }
+
+//    public long addNoteInfo(Note note) {
+//        return mDataRepository.addNote(note);
+//    }
 
     public void updateNote(Note note) {
         mDataRepository.updateNote(note);
     }
 
-    public void deleteNote(int id) {
+    public void deleteNote(long id) {
         mDataRepository.deleteNote(id);
     }
 
 
-    public LiveData<List<CheckItem>> getNoteCheckList(int noteId) {
+    public LiveData<List<CheckItem>> getNoteCheckList(long noteId) {
         return mDataRepository.getNoteCheckItems(noteId);
     }
 

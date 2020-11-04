@@ -15,7 +15,7 @@ import java.util.List;
 public interface CheckListDao {
 
     @Query("SELECT * FROM check_list_info where noteId = :checkListId")
-    LiveData<List<CheckItem>> getCheckListItems(int checkListId);
+    LiveData<List<CheckItem>> getCheckListItems(long checkListId);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateCheckItemStatus(CheckItem checkItem);
