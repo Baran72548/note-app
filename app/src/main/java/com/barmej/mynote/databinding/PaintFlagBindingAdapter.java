@@ -12,9 +12,7 @@ public class PaintFlagBindingAdapter {
         if(isChecked) {
             checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {
-            if ((checkBox.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) > 0){
-                checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-            }
+            checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         }
     }
 }

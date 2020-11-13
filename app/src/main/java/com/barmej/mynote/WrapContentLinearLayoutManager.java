@@ -2,12 +2,8 @@ package com.barmej.mynote;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.LinearLayout;
-
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class WrapContentLinearLayoutManager extends LinearLayoutManager {
 

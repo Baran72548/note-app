@@ -27,7 +27,6 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_view_photo);
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_view_photo);
 
@@ -39,43 +38,11 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
 
         Intent intent = getIntent();
         mPhotoUri = intent.getParcelableExtra(Constants.EXTRA_PHOTO_VIEW_URI);
-        //noteId = intent.getIntExtra(Constants.EXTRA_PHOTO_VIEW_URI, 0);
 
-        //setSelectedPhoto(mPhotoUri);
-
-//        findViewById(R.id.delete_photo_image_view).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                deletePhoto();
-//            }
-//        });
-
-        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);;
-        //mNote = mMainViewModel.getNoteInfo2(noteId);
+        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mNote.setNotePhotoUri(mPhotoUri);
 
         mBinding.setNote(mNote);
-    }
-
-    /**
-     * View uploaded image in a full screen.
-     */
-    private void setSelectedPhoto(Uri photoUri) {
-        //mViewedPhotoIV.setImageURI(photoUri);
-    }
-
-    /**
-     * Delete uploaded image.
-     */
-    public void deletePhoto(View view) {
-        //mPhotoUri = null;
-        //mNote.setId(noteId);
-        mNote.setNotePhotoUri(null);
-        mMainViewModel.updateNote(mNote);
-
-//        Intent intent = new Intent();
-//        setResult(RESULT_OK, intent);
-        finish();
     }
 
     /**
@@ -83,7 +50,6 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
      */
     @Override
     public void onClick(View view) {
-        //mPhotoUri = null;
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();

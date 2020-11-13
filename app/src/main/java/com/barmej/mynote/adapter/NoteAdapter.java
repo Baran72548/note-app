@@ -1,7 +1,6 @@
 package com.barmej.mynote.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
     private static int NOTE_WITHOUT_CHECK_LIST_TYPE = 1;
     private static int NOTE_WITH_CHECK_LIST_TYPE = 2;
-
-    public NoteAdapter() {}
 
     public NoteAdapter(List<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener) {
         this.mItems = mItems;
@@ -67,7 +64,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public int getItemViewType(int position) {
         if (mItems.get(position).getCheckItem() == null) {
             return NOTE_WITHOUT_CHECK_LIST_TYPE;
-
         } else {
             return NOTE_WITH_CHECK_LIST_TYPE;
         }

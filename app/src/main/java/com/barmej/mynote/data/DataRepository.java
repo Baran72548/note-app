@@ -9,7 +9,6 @@ import com.barmej.mynote.listener.OnNoteAddListener;
 import com.barmej.mynote.data.database.AppDatabase;
 import com.barmej.mynote.data.database.dao.CheckListDao;
 import com.barmej.mynote.data.database.dao.NoteInfoDao;
-import com.barmej.mynote.listener.OnNoteGetListener;
 
 import java.util.List;
 
@@ -37,33 +36,34 @@ public class DataRepository {
         mCheckListDao = mAppDatabase.checkListDao();
     }
 
+    /**
+     * .. Note ..
+     */
+
+    /**
+     * Get all notes from database.
+     * @return list of notes.
+     */
     public LiveData<List<Note>> getAllNotes()  {
         return mAppDatabase.noteInfoDao().getAllNotes();
     }
 
-    public Note getNoteInfo(long id) {
+    /**
+     * Get one note info from database.
+     * @param id is note's id which will be returned.
+     * @return note's info.
+     */
+    public LiveData<Note> getNoteInfo(long id) {
         return mAppDatabase.noteInfoDao().getNoteInfo(id);
     }
 
     /**
-     * .. Notes Tasks ..
-     */
-
-//    public LiveData<Note> getNoteInfo(long id) {
-//        return mAppDatabase.noteInfoDao().getNoteInfo(id);
-//    }
-
-//    public void getNoteInfo(long id, OnNoteGetListener onNoteGetListener) {
-//        new getNoteAsyncTask(mNoteInfoDao, onNoteGetListener).execute(id);
-//    }
-
-    /**
      * Insert note info into database.
+     * @param note to be added.
+     * @param onNoteAddListener will return id of inserted note.
      */
     public void addNote(Note note, OnNoteAddListener onNoteAddListener) {
-        //return new addAsyncTask(mNoteInfoDao).execute(note);
         new addAsyncTask(mNoteInfoDao, onNoteAddListener).execute(note);
-      //  long id =  mAppDatabase.noteInfoDao().addNoteInfo(note);
     }
 
     private static class addAsyncTask extends AsyncTask<Note, Void, Long> {
@@ -86,13 +86,9 @@ public class DataRepository {
         }
     }
 
-//    public long addNote(Note note) {
-//       // return new addAsyncTask(mNoteInfoDao).execute(note);
-//         return  mAppDatabase.noteInfoDao().addNoteInfo(note);
-//    }
-
     /**
      * Update note info.
+     * @param note is the new data to be updated.
      */
     public void updateNote(Note note) {
         new updateAsyncTask(mNoteInfoDao).execute(note);
@@ -113,6 +109,7 @@ public class DataRepository {
 
     /**
      * Delete note info from database task.
+     * @param id of note which will be deleted.
      */
     public void deleteNote(long id) {
         new deleteAsyncTask(mNoteInfoDao).execute(id);
@@ -132,42 +129,23 @@ public class DataRepository {
         }
     }
 
-    /**
-     * Get note info from database task.
-     */
-//    private static class getNoteAsyncTask extends AsyncTask<Long, Void, Note> {
-//        private NoteInfoDao noteInfoDao;
-//        private OnNoteGetListener onNoteGetListener;
-//
-//        public getNoteAsyncTask(NoteInfoDao noteInfoDao, OnNoteGetListener onNoteGetListener) {
-//            this.noteInfoDao = noteInfoDao;
-//            this.onNoteGetListener = onNoteGetListener;
-//        }
-//
-//        @Override
-//        protected Note doInBackground(Long... longs) {
-//            Log.i("newNote", String.valueOf(longs));
-//            return noteInfoDao.getNoteInfo(longs[0]);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Note note) {
-//            onNoteGetListener.onNoteGutted(note);
-//        }
-//    }
-
-
 
     /**
-     * .. CheckList Tasks ..
+     * .. CheckList ..
      */
 
+    /**
+     * Get list of check items from database.
+     * @param noteId to return only check items of selected note.
+     * @return list of checkItem.
+     */
     public LiveData<List<CheckItem>> getNoteCheckItems(long noteId) {
         return mAppDatabase.checkListDao().getCheckListItems(noteId);
     }
 
     /**
      * Update checkList item status task.
+     * @param checkItem to be updated.
      */
     public void updateCheckItemStatus(CheckItem checkItem) {
         new updateCheckItemAsyncTask(mCheckListDao).execute(checkItem);
@@ -188,6 +166,7 @@ public class DataRepository {
 
     /**
      * Insert checklist item info into database task.
+     * @param checkItem to be added to the database.
      */
     public void addCheckItem(CheckItem checkItem) {
         new addCheckItemAsyncTask(mCheckListDao).execute(checkItem);
@@ -205,4 +184,5 @@ public class DataRepository {
             return null;
         }
     }
+
 }

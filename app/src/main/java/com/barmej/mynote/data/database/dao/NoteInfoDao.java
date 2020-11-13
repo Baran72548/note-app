@@ -18,10 +18,7 @@ public interface NoteInfoDao {
     LiveData<List<Note>> getAllNotes();
 
     @Query("SELECT * FROM note_info where id = :id LIMIT 1")
-    Note getNoteInfo(long id);
-
-//    @Query("SELECT * FROM note_info where id = :id LIMIT 1")
-//    LiveData<Note> getNoteInfo(long id);
+    LiveData<Note> getNoteInfo(long id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Long addNoteInfo(Note note);
