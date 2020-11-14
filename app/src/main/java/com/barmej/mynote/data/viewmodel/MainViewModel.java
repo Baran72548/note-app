@@ -10,71 +10,89 @@ import com.barmej.mynote.listener.OnNoteAddListener;
 import com.barmej.mynote.data.CheckItem;
 import com.barmej.mynote.data.DataRepository;
 import com.barmej.mynote.data.Note;
-import com.barmej.mynote.listener.OnNoteGetListener;
 
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
     private DataRepository mDataRepository;
-//    private ArrayList<Note> notes;
-    private LiveData<List<Note>> mNotes;
-    private LiveData<Note> mNoteInfo;
-
-    private LiveData<List<CheckItem>> mCheckItems;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
 
         mDataRepository = DataRepository.getInstance(application);
-        mNotes = mDataRepository.getAllNotes();
     }
 
-//    public ArrayList<Note> getNotes() {
-//        return notes;
-//    }
+    /**
+     * .. Note ..
+     */
 
+    /**
+     * Get all notes.
+     * @return list of notes.
+     */
     public LiveData<List<Note>> getNotes() {
-        return mNotes;
+        return mDataRepository.getAllNotes();
     }
 
-    public Note getNoteInfo(long id) {
-        Note noteInfo = mDataRepository.getNoteInfo(id);
-        return noteInfo;
+    /**
+     * Get one note info.
+     * @param id is note's id which will be returned.
+     * @return note's info.
+     */
+    public LiveData<Note> getNoteInfo(long id) {
+        return mDataRepository.getNoteInfo(id);
     }
 
-//    public LiveData<Note> getNoteInfo(long id) {
-//        return mDataRepository.getNoteInfo(id);
-//    }
-
-//    public void getNoteInfo(long id, OnNoteGetListener onNoteGetListener) {
-//        mDataRepository.getNoteInfo(id, onNoteGetListener);
-//    }
-
+    /**
+     * Add note's info.
+     * @param note to be added.
+     * @param onNoteAddListener will return id of inserted note.
+     */
     public void addNoteInfo(Note note, OnNoteAddListener onNoteAddListener) {
-         mDataRepository.addNote(note, onNoteAddListener);
+        mDataRepository.addNote(note, onNoteAddListener);
     }
 
-//    public long addNoteInfo(Note note) {
-//        return mDataRepository.addNote(note);
-//    }
-
+    /**
+     * Update note's info.
+     * @param note is the new data to be updated.
+     */
     public void updateNote(Note note) {
         mDataRepository.updateNote(note);
     }
 
+    /**
+     * Delete a note.
+     * @param id of note which will be deleted.
+     */
     public void deleteNote(long id) {
         mDataRepository.deleteNote(id);
     }
 
+    /**
+     * .. CheckList ..
+     */
 
+    /**
+     * Get list of check items.
+     * @param noteId to return only check items of selected note.
+     * @return list of checkItem.
+     */
     public LiveData<List<CheckItem>> getNoteCheckList(long noteId) {
         return mDataRepository.getNoteCheckItems(noteId);
     }
 
+    /**
+     * Update checkList status.
+     * @param checkItem to be updated.
+     */
     public void updateCheckItemStatus(CheckItem checkItem) {
         mDataRepository.updateCheckItemStatus(checkItem);
     }
 
+    /**
+     * Add new check item to the list.
+     * @param checkItem to be added to the database.
+     */
     public void addCheckItem(CheckItem checkItem) {
         mDataRepository.addCheckItem(checkItem);
     }

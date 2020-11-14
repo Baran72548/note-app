@@ -21,7 +21,7 @@
         android:id="@+id/activity_card_view_background_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardBackgroundColor="@{ContextCompat.getColor(context, note.noteColorId)}"
+        app:cardBackgroundColor="@{note.noteColorId == 0 ?  @color/white : ContextCompat.getColor(context, note.noteColorId)}"
         tools:context=".EditNoteActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,95 +106,95 @@
                 app:layout_constraintTop_toBottomOf="@+id/colors_radio_group"
                 tools:layout_editor_absoluteX="1dp" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:layout_constraintBottom_toTopOf="@id/edit_note_button">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <EditText
-                android:id="@+id/edit_note_edit_text"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintHeight_min="100dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="top"
-                android:text="@{note.noteText}"
-                app:layout_constraintBottom_toTopOf="@+id/checklist_layout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_note_image_view" />
-
-            <ImageView
-                android:id="@+id/edit_note_image_view"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="8dp"
-                android:src="@{note.notePhotoUri}"
-                android:visibility="@{note.notePhotoUri != null ? View.VISIBLE : View.GONE}"
+                android:layout_height="0dp"
+                android:fillViewport="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/ic_launcher_background"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@+id/divider"
+                app:layout_constraintBottom_toTopOf="@id/edit_note_button">
 
-            <LinearLayout
-                android:id="@+id/checklist_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constrainedHeight="true"
-                android:orientation="vertical"
-                android:visibility="@{note.checkItem != null ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_note_edit_text"
-                tools:visibility="visible">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/checklist_recycler_view"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/add_checklist_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp" />
+                    <EditText
+                        android:id="@+id/edit_note_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintHeight_min="100dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="top"
+                        android:text="@{note.noteText}"
+                        app:layout_constraintBottom_toTopOf="@+id/checklist_layout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_note_image_view" />
 
-                <TextView
-                    android:id="@+id/add_new_checklist_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:hint="@string/add_new_list_item" />
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+                    <ImageView
+                        android:id="@+id/edit_note_image_view"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="8dp"
+                        android:src="@{note.notePhotoUri}"
+                        android:visibility="@{note.notePhotoUri != null ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:srcCompat="@drawable/ic_launcher_background"
+                        tools:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/checklist_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constrainedHeight="true"
+                        android:orientation="vertical"
+                        android:visibility="@{note.checkItem != null ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/edit_note_edit_text"
+                        tools:visibility="visible">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/checklist_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp" />
+
+                        <EditText
+                            android:id="@+id/add_checklist_edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/add_new_checklist_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:hint="@string/add_new_list_item" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
 
             <Button
                 android:id="@+id/edit_note_button"

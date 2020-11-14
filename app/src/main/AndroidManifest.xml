@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewPhotoActivity"></activity>
+        <activity android:name=".ViewPhotoActivity" />
         <activity android:name=".EditNoteActivity" />
         <activity android:name=".AddNewNoteActivity" />
         <activity android:name=".MainActivity">

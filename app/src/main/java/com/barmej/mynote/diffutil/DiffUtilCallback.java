@@ -14,6 +14,6 @@ public class DiffUtilCallback extends DiffUtil.ItemCallback<CheckItem> {
 
     @Override
     public boolean areContentsTheSame(@NonNull CheckItem oldItem, @NonNull CheckItem newItem) {
-        return oldItem.getCheckBoxItemStatus() == newItem.getCheckBoxItemStatus();
+        return oldItem.getCheckBoxItemStatus() != newItem.getCheckBoxItemStatus();
     }
 }

@@ -1,30 +1,23 @@
 package com.barmej.mynote;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.barmej.mynote.adapter.NoteAdapter;
-import com.barmej.mynote.data.CheckItem;
-import com.barmej.mynote.data.DataRepository;
 import com.barmej.mynote.data.Note;
-import com.barmej.mynote.data.database.AppDatabase;
 import com.barmej.mynote.data.viewmodel.MainViewModel;
 import com.barmej.mynote.listener.ItemClickListener;
 import com.barmej.mynote.listener.ItemLongClickListener;
@@ -35,14 +28,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private NoteAdapter mAdapter;
-    //private ArrayList<Note> mItems;
-    private AppDatabase mAppDatabase;
     private MainViewModel mMainViewModel;
 
     private Note mNote;
     private List<Note> mItems;
-
-    private ArrayList<CheckItem> mCheckItemItems;
 
     Menu mMenu;
 
@@ -54,10 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAppDatabase = AppDatabase.getInstance(this);
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-        mCheckItemItems = new ArrayList<>();
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mItems = new ArrayList<>();
@@ -99,18 +85,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Note> notes) {
                 mAdapter.updateData(notes);
-                Log.i("Adapter.. ", String.valueOf(mAdapter));
             }
         });
     }
 
     /**
-     * This method will be called in case of click on a recyclerView item.
+     * This method will be called in case of click on a recyclerView item, and start EditNoteActivity with sending note's id.
      * @param position will be needed to get note's info in that position and edit it.
      */
     private void editItem(int position) {
         Note note = mAdapter.getNoteAtPosition(position);
-        //int noteId = note.getId();
         long noteId = note.getId();
         Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
         intent.putExtra(Constants.EXTRA_NOTE_ID, noteId);
@@ -129,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mNote = mAdapter.getNoteAtPosition(position);
                         mMainViewModel.deleteNote(mNote.getId());
-                        Log.i("delete note", "note deleted" + mNote);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -156,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
             mMenu.findItem(R.id.action_staggered_grid).setVisible(true);
             return true;
         } else if (item.getItemId() == R.id.action_staggered_grid) {
-        mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-        item.setVisible(false);
-        mMenu.findItem(R.id.action_list).setVisible(true);
-        return true;
+            mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+            item.setVisible(false);
+            mMenu.findItem(R.id.action_list).setVisible(true);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

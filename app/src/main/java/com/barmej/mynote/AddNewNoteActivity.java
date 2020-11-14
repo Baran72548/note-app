@@ -3,7 +3,6 @@ package com.barmej.mynote;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -25,7 +24,6 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.barmej.mynote.adapter.ChecklistAdapter;
-import com.barmej.mynote.adapter.NoteAdapter;
 import com.barmej.mynote.data.CheckItem;
 import com.barmej.mynote.data.Note;
 import com.barmej.mynote.data.viewmodel.MainViewModel;
@@ -65,8 +63,6 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
     private Note note;
     private CheckItem checkItem;
 
-    private NoteAdapter mNoteAdapter;
-
     private ActivityAddNewNoteBinding mBinding;
 
     @Override
@@ -81,11 +77,7 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         mRadioGroup = findViewById(R.id.colors_radio_group);
         mLinearLayout = findViewById(R.id.checklist_layout);
 
-//        note = new Note();
-//        checkItem = new CheckItem();
         mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-        mNoteAdapter = new NoteAdapter();
 
         findViewById(R.id.photo_image_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +99,6 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 setCardViewColor();
-                setNoteDataBinding();
             }
         });
 
@@ -124,7 +115,7 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         mChecklistAdapter = new ChecklistAdapter(new CheckBoxClickListener() {
             @Override
             public void onCheckBoxClickListener(CheckItem checkItem, boolean checked) {
-                mMainViewModel.updateCheckItemStatus(checkItem);
+                onCheckListItemClicked(checkItem, checked);
             }
         });
 
@@ -223,7 +214,8 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
 
     private void setSelectedPhoto(Uri data) {
         mSelectedPhotoUri = data;
-        setNoteDataBinding();
+        note.setNotePhotoUri(mSelectedPhotoUri);
+        mBinding.setNote(note);
     }
 
     /**
@@ -241,7 +233,8 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
     private void removePhoto() {
         mNewAddedPhotoIV.setImageURI(null);
         mSelectedPhotoUri = null;
-        setNoteDataBinding();
+        note.setNotePhotoUri(mSelectedPhotoUri);
+        mBinding.setNote(note);
     }
 
     /**
@@ -264,25 +257,26 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
                 mBackgroundColorId = R.color.yellow;
                 break;
         }
+
+        note.setNoteColorId(mBackgroundColorId);
+        mBinding.setNote(note);
     }
 
     /**
      * Adding checkList items to Database.
      */
     private void addNewChecklistItem() {
-
-        /** O. */
         checkItem = new CheckItem();
         checkItem.setNoteId(noteId);
         checkItem.setCheckBoxItemText(mAddNewChecklistItemET.getText().toString());
         checkItem.setCheckBoxItemStatus(false);
         mMainViewModel.addCheckItem(checkItem);
 
-
         mMainViewModel.getNoteCheckList(noteId).observe(this, new Observer<List<CheckItem>>() {
             @Override
             public void onChanged(List<CheckItem> checkItems) {
                 mChecklistAdapter.submitList(checkItems);
+                mItems.clear();
                 mItems.addAll(checkItems);
             }
         });
@@ -291,7 +285,17 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
-     * Update note's info in database.
+     * Responding to ClickListener on checkList items and update the status of checkBox item.
+     * @param checkItem is the clicked item.
+     * @param checkBoxStatus isChecked value of checkBox.
+     */
+    private void onCheckListItemClicked(CheckItem checkItem, boolean checkBoxStatus) {
+        checkItem.setCheckBoxItemStatus(checkBoxStatus);
+        mMainViewModel.updateCheckItemStatus(checkItem);
+    }
+
+    /**
+     * Click on "Done" button will update note's info in database.
      */
     @Override
     public void onClick(View view) {
