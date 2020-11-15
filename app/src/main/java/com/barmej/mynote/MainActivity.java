@@ -139,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
             mMenu.findItem(R.id.action_staggered_grid).setVisible(true);
             return true;
         } else if (item.getItemId() == R.id.action_staggered_grid) {
-        mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-        item.setVisible(false);
-        mMenu.findItem(R.id.action_list).setVisible(true);
-        return true;
+            mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+            item.setVisible(false);
+            mMenu.findItem(R.id.action_list).setVisible(true);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -49,7 +49,7 @@ public class MainViewModel extends AndroidViewModel {
      * @param onNoteAddListener will return id of inserted note.
      */
     public void addNoteInfo(Note note, OnNoteAddListener onNoteAddListener) {
-         mDataRepository.addNote(note, onNoteAddListener);
+        mDataRepository.addNote(note, onNoteAddListener);
     }
 
     /**
