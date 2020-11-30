@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Note mNote;
     private List<Note> mItems;
 
-    Menu mMenu;
-
-    RecyclerView.LayoutManager mListLayoutManager;
+    private Menu mMenu;
     RecyclerView.LayoutManager mStaggeredGridLayoutManager;
 
     @Override
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mMainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mItems = new ArrayList<>();
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        mListLayoutManager = new LinearLayoutManager(this);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
@@ -134,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_list){
-            mRecyclerView.setLayoutManager(mListLayoutManager);
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
             item.setVisible(false);
             mMenu.findItem(R.id.action_staggered_grid).setVisible(true);
             return true;

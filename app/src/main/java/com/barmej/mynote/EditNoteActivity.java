@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,21 +28,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity {
-    EditText mEditedNoteET;
-    ImageView mEditedPhotoIV;
-    Uri mSelectedPhotoUri = null;
-    EditText mAddNewChecklistItemET;
+    private EditText mEditedNoteET;
+    private ImageView mEditedPhotoIV;
+    private Uri mSelectedPhotoUri = null;
+    private EditText mAddNewChecklistItemET;
 
-    int mBackgroundColorId;
+    private int mBackgroundColorId;
 
-    long mNoteId;
+    private long mNoteId;
 
     private RadioGroup mRadioGroup;
 
     private static final int VIEW_PHOTO = 110;
     private static final int PICK_IMAGE = 130;
 
-    LinearLayout mLinearLayout;
+    private LinearLayout mLinearLayout;
     private RecyclerView mRecyclerView;
     private ChecklistAdapter mChecklistAdapter;
     private List<CheckItem> mItems;
@@ -62,11 +63,10 @@ public class EditNoteActivity extends AppCompatActivity {
 
         note = new Note();
         checkItem = new CheckItem();
-        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mMainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         Intent intent = getIntent();
         mNoteId = intent.getLongExtra(Constants.EXTRA_NOTE_ID, 0);
-
 
         mEditedNoteET = findViewById(R.id.edit_note_edit_text);
         mEditedPhotoIV = findViewById(R.id.edit_note_image_view);
@@ -166,23 +166,27 @@ public class EditNoteActivity extends AppCompatActivity {
                 EditNoteActivity.this.note = note;
                 mBinding.setNote(note);
 
-                mSelectedPhotoUri = note.getNotePhotoUri();
+                try {
+                    mSelectedPhotoUri = note.getNotePhotoUri();
 
-                switch (note.getNoteColorId()) {
-                    case R.color.white:
-                        mRadioGroup.check(R.id.white_radio_button);
-                        break;
-                    case R.color.blue:
-                        mRadioGroup.check(R.id.blue_radio_button);
-                        break;
-                    case R.color.red:
-                        mRadioGroup.check(R.id.red_radio_button);
-                        break;
-                    case R.color.yellow:
-                        mRadioGroup.check(R.id.yellow_radio_button);
-                        break;
+                    switch (note.getNoteColorId()) {
+                        case R.color.white:
+                            mRadioGroup.check(R.id.white_radio_button);
+                            break;
+                        case R.color.blue:
+                            mRadioGroup.check(R.id.blue_radio_button);
+                            break;
+                        case R.color.red:
+                            mRadioGroup.check(R.id.red_radio_button);
+                            break;
+                        case R.color.yellow:
+                            mRadioGroup.check(R.id.yellow_radio_button);
+                            break;
+                    }
+                    mBackgroundColorId = note.getNoteColorId();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                mBackgroundColorId = note.getNoteColorId();
             }
         });
     }
@@ -286,13 +290,13 @@ public class EditNoteActivity extends AppCompatActivity {
         if (editedNoteText.isEmpty() && mSelectedPhotoUri == null && mChecklistAdapter.getItemCount() == 0) {
             mMainViewModel.deleteNote(noteId);
             finish();
+        } else {
+            note.setId(noteId);
+            note.setNoteText(editedNoteText);
+            note.setCheckItem(mItems);
+            mMainViewModel.updateNote(note);
+
+            finish();
         }
-
-        note.setId(noteId);
-        note.setNoteText(editedNoteText);
-        note.setCheckItem(mItems);
-        mMainViewModel.updateNote(note);
-
-        finish();
     }
 }

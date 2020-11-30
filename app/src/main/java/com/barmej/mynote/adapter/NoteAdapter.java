@@ -20,11 +20,11 @@ import java.util.List;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
     private List<Note> mItems;
-    private ItemClickListener mItemClickListener;
-    private ItemLongClickListener mItemLongClickListener;
+    private final ItemClickListener mItemClickListener;
+    private final ItemLongClickListener mItemLongClickListener;
 
-    private static int NOTE_WITHOUT_CHECK_LIST_TYPE = 1;
-    private static int NOTE_WITH_CHECK_LIST_TYPE = 2;
+    private static final int NOTE_WITHOUT_CHECK_LIST_TYPE = 1;
+    private static final int NOTE_WITH_CHECK_LIST_TYPE = 2;
 
     public NoteAdapter(List<Note> mItems, ItemClickListener mItemClickListener, ItemLongClickListener mItemLongClickListener) {
         this.mItems = mItems;

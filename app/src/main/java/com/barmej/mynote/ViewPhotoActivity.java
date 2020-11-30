@@ -15,8 +15,7 @@ import com.barmej.mynote.data.viewmodel.MainViewModel;
 import com.barmej.mynote.databinding.ActivityViewPhotoBinding;
 
 public class ViewPhotoActivity extends AppCompatActivity implements View.OnClickListener {
-    ImageView mViewedPhotoIV;
-    Uri mPhotoUri;
+    private Uri mPhotoUri;
 
     private Note mNote;
 
@@ -33,8 +32,6 @@ public class ViewPhotoActivity extends AppCompatActivity implements View.OnClick
         mBinding.setListener(this);
 
         mNote = new Note();
-
-        mViewedPhotoIV = findViewById(R.id.viewed_photo_image_view);
 
         Intent intent = getIntent();
         mPhotoUri = intent.getParcelableExtra(Constants.EXTRA_PHOTO_VIEW_URI);

@@ -1,4 +1,4 @@
-package com.barmej.mynote.diffutil;
+package com.barmej.mynote.utils.diffutil;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;

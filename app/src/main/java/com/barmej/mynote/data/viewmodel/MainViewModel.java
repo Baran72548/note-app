@@ -14,7 +14,7 @@ import com.barmej.mynote.data.Note;
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
-    private DataRepository mDataRepository;
+    private final DataRepository mDataRepository;
 
     public MainViewModel(@NonNull Application application) {
         super(application);

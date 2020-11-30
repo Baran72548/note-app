@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.barmej.mynote.R;
 import com.barmej.mynote.data.CheckItem;
 import com.barmej.mynote.databinding.ItemCheckListBinding;
-import com.barmej.mynote.diffutil.DiffUtilCallback;
+import com.barmej.mynote.utils.diffutil.DiffUtilCallback;
 import com.barmej.mynote.listener.CheckBoxClickListener;
 
 public class ChecklistAdapter extends ListAdapter<CheckItem, ChecklistAdapter.ChecklistViewHolder> {
-    private CheckBoxClickListener mCheckBoxClickListener;
-    private static DiffUtilCallback diffUtilCallback = new DiffUtilCallback();
+    private final CheckBoxClickListener mCheckBoxClickListener;
+    private static final DiffUtilCallback diffUtilCallback = new DiffUtilCallback();
 
     public ChecklistAdapter(CheckBoxClickListener mCheckBoxClickListener) {
         super(diffUtilCallback);

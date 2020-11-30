@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,14 +37,14 @@ import java.util.List;
 
 public class AddNewNoteActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText mEditText;
-    ImageView mNewAddedPhotoIV;
-    Uri mSelectedPhotoUri = null;
-    EditText mAddNewChecklistItemET;
-    LinearLayout mLinearLayout;
+    private EditText mEditText;
+    private ImageView mNewAddedPhotoIV;
+    private Uri mSelectedPhotoUri = null;
+    private EditText mAddNewChecklistItemET;
+    private LinearLayout mLinearLayout;
 
-    int mBackgroundColorId = R.color.white;
-    int checkedRadioButtonId;
+    private int mBackgroundColorId = R.color.white;
+    private int checkedRadioButtonId;
 
     private RadioGroup mRadioGroup;
 
@@ -77,7 +78,7 @@ public class AddNewNoteActivity extends AppCompatActivity implements View.OnClic
         mRadioGroup = findViewById(R.id.colors_radio_group);
         mLinearLayout = findViewById(R.id.checklist_layout);
 
-        mMainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mMainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         findViewById(R.id.photo_image_button).setOnClickListener(new View.OnClickListener() {
             @Override
